@@ -5,19 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="A customizable personal portfolio website.">
-<title>YOUR NAME — Portfolio</title>
+<title>creepsterdan601's horribly written portfolio</title>
 
 <style>
-/* =========================================================
-   GITHUB-FRIENDLY SINGLE FILE PORTFOLIO
-   Everything is contained in this file.
-
-   QUICK EDIT:
-   1. Change the colors in :root.
-   2. Change the text in the HTML.
-   3. Replace image paths such as images/profile.png.
-   4. Add/remove project cards.
-   ========================================================= */
 
 :root {
     --bg: #120b10;
@@ -40,7 +30,6 @@
     --nav-width: 270px;
 }
 
-/* RESET */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -60,15 +49,6 @@ body {
     line-height: 1.6;
 }
 
-/* =========================================================
-   NEW MOVING DIAGONAL BACKGROUND
-   ---------------------------------------------------------
-   This replaces the old checkerboard.
-
-   The large diagonal shapes continuously travel across the
-   page. It is CSS-only, so it works on GitHub Pages.
-   ========================================================= */
-
 .background {
     position: fixed;
     inset: 0;
@@ -80,7 +60,6 @@ body {
         var(--bg);
 }
 
-/* Large diagonal ribbon */
 .background::before {
     content: "";
     position: absolute;
@@ -101,7 +80,6 @@ body {
     animation: diagonalScroll 18s linear infinite;
 }
 
-/* Soft diagonal blob */
 .background::after {
     content: "";
     position: absolute;
@@ -138,17 +116,12 @@ body {
     }
 }
 
-/* Respect reduced-motion settings */
 @media (prefers-reduced-motion: reduce) {
     .background::before,
     .background::after {
         animation: none;
     }
 }
-
-/* =========================================================
-   TOP BAR
-   ========================================================= */
 
 .topbar {
     position: sticky;
@@ -178,11 +151,6 @@ body {
     display: grid;
     place-items: center;
 
-    /*
-       NEW SHAPE:
-       An asymmetric "petal" / diamond shape instead of
-       the circular profile style from the original.
-    */
     border-radius: 13px 28px 13px 28px;
     transform: rotate(-8deg);
 
@@ -227,10 +195,6 @@ body {
     color: var(--cream);
 }
 
-/* =========================================================
-   PAGE LAYOUT
-   ========================================================= */
-
 .layout {
     width: min(1250px, calc(100% - 40px));
     margin: 0 auto;
@@ -240,7 +204,6 @@ body {
     padding: 38px 0 90px;
 }
 
-/* LEFT NAV */
 .sidebar {
     position: sticky;
     top: 105px;
@@ -261,7 +224,6 @@ body {
     object-fit: cover;
     margin-bottom: 12px;
 
-    /* Different shape from the reference */
     border-radius: 16px 38px 16px 38px;
 
     border: 2px solid var(--pink);
@@ -305,10 +267,6 @@ body {
     transform: translateX(5px);
 }
 
-/* =========================================================
-   MAIN CONTENT
-   ========================================================= */
-
 main {
     min-width: 0;
 }
@@ -318,7 +276,6 @@ section {
     margin-bottom: 100px;
 }
 
-/* INTRO HERO */
 .hero {
     min-height: 460px;
     display: grid;
@@ -342,7 +299,6 @@ section {
     box-shadow: 0 25px 60px var(--shadow);
 }
 
-/* Decorative angular cut */
 .hero::after {
     content: "";
     position: absolute;
@@ -422,7 +378,6 @@ section {
     transform: translateY(-2px);
 }
 
-/* Hero artwork */
 .hero-art {
     min-height: 350px;
     position: relative;
@@ -435,10 +390,6 @@ section {
     aspect-ratio: 1 / 1;
     position: relative;
 
-    /*
-       Cool custom shape:
-       irregular rounded diamond.
-    */
     clip-path: polygon(
         14% 7%,
         75% 0%,
@@ -478,10 +429,6 @@ section {
     font-weight: 900;
 }
 
-/* =========================================================
-   SECTION HEADERS
-   ========================================================= */
-
 .section-heading {
     display: flex;
     justify-content: space-between;
@@ -498,10 +445,6 @@ section {
     color: var(--muted);
     font-size: 13px;
 }
-
-/* =========================================================
-   ABOUT
-   ========================================================= */
 
 .about-layout {
     display: grid;
@@ -525,10 +468,6 @@ section {
     color: var(--muted);
 }
 
-/* =========================================================
-   WORKS
-   ========================================================= */
-
 .work-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -543,10 +482,6 @@ section {
     background: var(--surface);
     border: 1px solid var(--line);
 
-    /*
-       Different card shape:
-       cut/slanted corners.
-    */
     border-radius: 18px 5px 18px 5px;
 
     transition:
@@ -589,10 +524,6 @@ section {
     color: var(--pink-light);
     font-size: 11px;
 }
-
-/* =========================================================
-   INTERACTIVE ACCORDION
-   ========================================================= */
 
 .accordion {
     display: grid;
@@ -648,10 +579,6 @@ section {
     transform: rotate(180deg);
 }
 
-/* =========================================================
-   BLOG / CHARACTER / LOUNGE
-   ========================================================= */
-
 .simple-panel {
     padding: 25px;
     background: var(--surface);
@@ -678,10 +605,6 @@ section {
     border: 1px solid var(--line);
     font-size: 12px;
 }
-
-/* =========================================================
-   MODAL
-   ========================================================= */
 
 .modal {
     position: fixed;
@@ -733,20 +656,12 @@ section {
     cursor: pointer;
 }
 
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
 footer {
     padding: 35px 0;
     color: var(--muted);
     font-size: 12px;
     border-top: 1px solid var(--line);
 }
-
-/* =========================================================
-   LIGHT THEME
-   ========================================================= */
 
 body.light {
     --bg: #f8edf1;
@@ -762,10 +677,6 @@ body.light {
     --line: rgba(173,71,106,.25);
     --shadow: rgba(70,30,45,.16);
 }
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
 
 @media (max-width: 950px) {
     .layout {
@@ -833,9 +744,6 @@ body.light {
 
 <div class="background" aria-hidden="true"></div>
 
-<!-- =======================================================
-     TOP BAR
-     ======================================================= -->
 <header class="topbar">
 
     <a class="brand" href="#home">
@@ -859,20 +767,12 @@ body.light {
 
 </header>
 
-
 <div class="layout">
 
-    <!-- ===================================================
-         SIDEBAR
-         =================================================== -->
     <aside class="sidebar">
 
         <div class="profile-mini">
 
-            <!--
-                Replace this placeholder with:
-                <img class="avatar" src="images/profile.png" alt="Your profile">
-            -->
             <div class="avatar" aria-label="Profile image placeholder"></div>
 
             <div>
@@ -920,13 +820,8 @@ body.light {
 
     </aside>
 
-
-    <!-- ===================================================
-         MAIN
-         =================================================== -->
     <main>
 
-        <!-- HERO -->
         <section id="home">
 
             <div class="hero">
@@ -962,12 +857,10 @@ body.light {
 
                 </div>
 
-
                 <div class="hero-art">
 
                     <div class="art-frame">
 
-                        <!-- Replace with your own artwork -->
                         <img
                             src="https://placehold.co/700x700/5b3042/fae8ed?text=YOUR+ART"
                             alt="Featured artwork placeholder"
@@ -985,8 +878,6 @@ body.light {
 
         </section>
 
-
-        <!-- ABOUT -->
         <section id="about">
 
             <div class="section-heading">
@@ -997,7 +888,6 @@ body.light {
 
                 <p>Click the sections to open them.</p>
             </div>
-
 
             <div class="accordion">
 
@@ -1016,7 +906,6 @@ body.light {
                     </div>
                 </div>
 
-
                 <div>
                     <button type="button" aria-expanded="false">
                         Mission & Vision
@@ -1031,7 +920,6 @@ body.light {
                     </div>
                 </div>
 
-
                 <div>
                     <button type="button" aria-expanded="false">
                         Skills & Tools
@@ -1045,7 +933,6 @@ body.light {
                         </p>
                     </div>
                 </div>
-
 
                 <div>
                     <button type="button" aria-expanded="false">
@@ -1065,8 +952,6 @@ body.light {
 
         </section>
 
-
-        <!-- WORKS -->
         <section id="works">
 
             <div class="section-heading">
@@ -1077,7 +962,6 @@ body.light {
 
                 <p>Click a project for details.</p>
             </div>
-
 
             <div class="work-grid">
 
@@ -1100,7 +984,6 @@ body.light {
                     </div>
                 </article>
 
-
                 <article
                     class="work-card"
                     tabindex="0"
@@ -1120,7 +1003,6 @@ body.light {
                     </div>
                 </article>
 
-
                 <article
                     class="work-card"
                     tabindex="0"
@@ -1139,7 +1021,6 @@ body.light {
                         <span class="work-tag">2026</span>
                     </div>
                 </article>
-
 
                 <article
                     class="work-card"
@@ -1164,8 +1045,6 @@ body.light {
 
         </section>
 
-
-        <!-- STUDY -->
         <section id="study">
 
             <div class="section-heading">
@@ -1193,8 +1072,6 @@ body.light {
 
         </section>
 
-
-        <!-- BLOGS -->
         <section id="blogs">
 
             <div class="section-heading">
@@ -1221,8 +1098,6 @@ body.light {
 
         </section>
 
-
-        <!-- OC COMPENDIUM -->
         <section id="characters">
 
             <div class="section-heading">
@@ -1251,8 +1126,6 @@ body.light {
 
         </section>
 
-
-        <!-- VISITOR LOUNGE -->
         <section id="lounge">
 
             <div class="section-heading">
@@ -1281,8 +1154,6 @@ body.light {
 
         </section>
 
-
-        <!-- CONTACT -->
         <section id="contact">
 
             <div class="section-heading">
@@ -1329,7 +1200,6 @@ body.light {
 
         </section>
 
-
         <footer>
             © 2026 YOUR NAME · Built with HTML, CSS & JavaScript
         </footer>
@@ -1337,11 +1207,6 @@ body.light {
     </main>
 
 </div>
-
-
-<!-- =======================================================
-     PROJECT MODAL
-     ======================================================= -->
 
 <div
     class="modal"
@@ -1372,18 +1237,10 @@ body.light {
 
 </div>
 
-
 <script>
-/* =========================================================
-   INTERACTIVE JAVASCRIPT
-   ========================================================= */
 
 (function () {
     "use strict";
-
-    /* -----------------------------
-       ACCORDIONS
-       ----------------------------- */
 
     const accordionButtons =
         document.querySelectorAll(".accordion button");
@@ -1412,11 +1269,6 @@ body.light {
 
     });
 
-
-    /* -----------------------------
-       THEME SWITCHER
-       ----------------------------- */
-
     const themeButton =
         document.getElementById("themeButton");
 
@@ -1432,11 +1284,6 @@ body.light {
 
     });
 
-
-    /* -----------------------------
-       PROJECT POPUPS
-       ----------------------------- */
-
     const modal =
         document.getElementById("projectModal");
 
@@ -1448,7 +1295,6 @@ body.light {
 
     const modalClose =
         document.getElementById("modalClose");
-
 
     function openProject(card) {
 
@@ -1464,13 +1310,11 @@ body.light {
 
     }
 
-
     function closeProject() {
 
         modal.classList.remove("open");
 
     }
-
 
     document
         .querySelectorAll(".work-card")
@@ -1483,7 +1327,6 @@ body.light {
                 }
             );
 
-            /* Keyboard accessibility */
             card.addEventListener(
                 "keydown",
                 function (event) {
@@ -1501,12 +1344,10 @@ body.light {
 
         });
 
-
     modalClose.addEventListener(
         "click",
         closeProject
     );
-
 
     modal.addEventListener(
         "click",
@@ -1519,7 +1360,6 @@ body.light {
         }
     );
 
-
     document.addEventListener(
         "keydown",
         function (event) {
@@ -1531,17 +1371,11 @@ body.light {
         }
     );
 
-
-    /* -----------------------------
-       VISITOR BUTTON
-       ----------------------------- */
-
     const helloButton =
         document.getElementById("helloButton");
 
     const visitorMessage =
         document.getElementById("visitorMessage");
-
 
     helloButton.addEventListener(
         "click",
@@ -1553,17 +1387,11 @@ body.light {
         }
     );
 
-
-    /* -----------------------------
-       ACTIVE NAVIGATION
-       ----------------------------- */
-
     const navLinks =
         document.querySelectorAll(".side-nav a");
 
     const sections =
         document.querySelectorAll("main section");
-
 
     const observer =
         new IntersectionObserver(
@@ -1595,7 +1423,6 @@ body.light {
                     "-25% 0px -65% 0px"
             }
         );
-
 
     sections.forEach(function (section) {
         observer.observe(section);
