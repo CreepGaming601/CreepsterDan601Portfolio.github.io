@@ -655,6 +655,11 @@ section {
     align-items: center;
 }
 
+.schedule-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
 
 .schedule-intro {
     margin-bottom: 18px;
@@ -705,10 +710,11 @@ section {
 }
 
 .schedule-entry {
-    cursor: default;
+    cursor: text;
     color: var(--cream);
     font-weight: 700;
-    transition: .25s ease;
+    transition: .15s ease;
+    outline: none;
 }
 
 .schedule-entry:hover {
@@ -716,6 +722,11 @@ section {
     background: rgba(111,189,131,.10);
 }
 
+.schedule-entry:focus {
+    border-color: var(--green);
+    box-shadow: inset 0 0 0 1px var(--green);
+    background: rgba(111,189,131,.14);
+}
 
 .schedule-entry.has-content {
     background: rgba(111,189,131,.13);
@@ -864,54 +875,6 @@ footer {
         grid-template-columns: 1fr;
     }
 }
-
-main section {
-    animation: pageFadeIn .45s ease both;
-}
-
-main section.page-active {
-    animation: pageFadeIn .45s ease both;
-}
-
-@keyframes pageFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(14px);
-        filter: blur(3px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-        filter: blur(0);
-    }
-}
-
-.side-nav a,
-.button,
-.work-card,
-.simple-panel,
-.chip,
-.art-frame,
-.schedule-entry {
-    transition:
-        opacity .25s ease,
-        transform .25s ease,
-        background-color .25s ease,
-        border-color .25s ease,
-        color .25s ease,
-        box-shadow .25s ease;
-}
-
-.side-nav a:hover,
-.button:hover {
-    transform: translateY(-2px);
-}
-
-.work-card:hover {
-    transform: translateY(-5px);
-}
-
 </style>
 </head>
 
@@ -973,7 +936,12 @@ main section.page-active {
             <a href="#blogs">
                 <span>05</span> Blogs
             </a>
-<a href="#contact">
+
+            <a href="#lounge">
+                <span>06</span> Visitor Lounge
+            </a>
+
+            <a href="#contact">
                 <span>07</span> Contacts
             </a>
 
@@ -1198,10 +1166,20 @@ main section.page-active {
                 <div>
                     <div class="eyebrow">Current plans & practice</div>
                     <h2>Weekly Schedule</h2>
-                </div></div>
+                </div>
+
+                <div class="schedule-actions">
+                    <button class="button primary" id="saveSchedule" type="button">Save Schedule</button>
+                    <button class="button secondary" id="clearSchedule" type="button">Clear</button>
+                </div>
+            </div>
 
             <div class="simple-panel schedule-intro">
-                <p>Edit this schedule directly in the HTML file on GitHub. Add, remove, or change the text inside each schedule slot, then commit your changes to update the website.</p>
+                <p>
+                    Use this like a personal weekly planner. Click any schedule box
+                    to type, replace, or remove what you are working on. Your changes
+                    are saved in this browser.
+                </p>
             </div>
 
             <div class="schedule-wrap">
@@ -1295,7 +1273,36 @@ main section.page-active {
             </div>
 
         </section>
-<section id="contact">
+
+        <section id="lounge">
+
+            <div class="section-heading">
+                <div>
+                    <div class="eyebrow">For visitors</div>
+                    <h2>Visitor's Lounge</h2>
+                </div>
+            </div>
+
+            <div class="simple-panel">
+
+                <p id="visitorMessage">
+                    Welcome to the lounge. Press the button to leave a little
+                    greeting.
+                </p>
+
+                <button
+                    class="button primary"
+                    id="helloButton"
+                    type="button"
+                >
+                    Say Hello ♡
+                </button>
+
+            </div>
+
+        </section>
+
+        <section id="contact">
 
             <div class="section-heading">
                 <div>
@@ -1567,15 +1574,14 @@ const modal =
     const scheduleGrid =
         document.getElementById("scheduleGrid");
 
-    const scheduleData = [
-        { day: "MON", time: "8:00 AM", text: "" },
-        { day: "TUE", time: "10:00 AM", text: "" },
-        { day: "WED", time: "1:00 PM", text: "" },
-        { day: "THU", time: "3:30 PM", text: "" },
-        { day: "FRI", time: "5:00 PM", text: "" },
-        { day: "SAT", time: "11:00 AM", text: "" },
-        { day: "SUN", time: "2:00 PM", text: "" }
-    ];
+    const saveScheduleButton =
+        document.getElementById("saveSchedule");
+
+    const clearScheduleButton =
+        document.getElementById("clearSchedule");
+
+    const scheduleStorageKey =
+        "purgatoryPortfolioWeeklySchedule";
 
     const days = [
         "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"
@@ -1595,10 +1601,10 @@ const modal =
     }
 
     function createSchedule() {
-        const existingEntries =
-            scheduleGrid.querySelectorAll(".schedule-entry");
+        const oldEntries =
+            Array.from(scheduleGrid.querySelectorAll(".schedule-entry"));
 
-        existingEntries.forEach(function (entry) {
+        oldEntries.forEach(function (entry) {
             entry.remove();
         });
 
@@ -1613,33 +1619,128 @@ const modal =
                     "schedule-cell time-cell";
 
                 timeCell.textContent = time;
+
                 scheduleGrid.appendChild(timeCell);
 
-                days.forEach(function (day) {
+                for (let day = 0; day < days.length; day++) {
                     const entry =
                         document.createElement("div");
 
                     entry.className =
                         "schedule-cell schedule-entry";
 
-                    const item =
-                        scheduleData.find(function (data) {
-                            return data.day === day &&
-                                data.time === time;
-                        });
+                    entry.contentEditable = "true";
+                    entry.spellcheck = false;
+                    entry.dataset.day = days[day];
+                    entry.dataset.time = time;
 
-                    if (item && item.text) {
-                        entry.textContent = item.text;
-                        entry.classList.add("has-content");
-                    }
+                    entry.addEventListener("input", function () {
+                        entry.classList.toggle(
+                            "has-content",
+                            entry.textContent.trim() !== ""
+                        );
+                    });
+
+                    entry.addEventListener("keydown", function (event) {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            entry.blur();
+                        }
+                    });
 
                     scheduleGrid.appendChild(entry);
-                });
+                }
             }
         }
     }
 
+    function saveSchedule() {
+        const entries =
+            Array.from(
+                scheduleGrid.querySelectorAll(".schedule-entry")
+            );
+
+        const data = {};
+
+        entries.forEach(function (entry) {
+            const key =
+                entry.dataset.day + "|" + entry.dataset.time;
+
+            data[key] = entry.textContent.trim();
+        });
+
+        localStorage.setItem(
+            scheduleStorageKey,
+            JSON.stringify(data)
+        );
+    }
+
+    function loadSchedule() {
+        const saved =
+            localStorage.getItem(scheduleStorageKey);
+
+        if (!saved) {
+            return;
+        }
+
+        try {
+            const data = JSON.parse(saved);
+
+            scheduleGrid
+                .querySelectorAll(".schedule-entry")
+                .forEach(function (entry) {
+                    const key =
+                        entry.dataset.day + "|" + entry.dataset.time;
+
+                    if (data[key]) {
+                        entry.textContent = data[key];
+                        entry.classList.add("has-content");
+                    }
+                });
+        } catch (error) {
+            localStorage.removeItem(scheduleStorageKey);
+        }
+    }
+
     createSchedule();
+    loadSchedule();
+
+    saveScheduleButton.addEventListener(
+        "click",
+        function () {
+            saveSchedule();
+            saveScheduleButton.textContent = "Saved ✓";
+
+            setTimeout(function () {
+                saveScheduleButton.textContent = "Save Schedule";
+            }, 1200);
+        }
+    );
+
+    clearScheduleButton.addEventListener(
+        "click",
+        function () {
+            const confirmed =
+                window.confirm(
+                    "Clear your entire weekly schedule?"
+                );
+
+            if (!confirmed) {
+                return;
+            }
+
+            scheduleGrid
+                .querySelectorAll(".schedule-entry")
+                .forEach(function (entry) {
+                    entry.textContent = "";
+                    entry.classList.remove("has-content");
+                });
+
+            localStorage.removeItem(scheduleStorageKey);
+        }
+    );
+
+    window.addEventListener("beforeunload", saveSchedule);
 
 })();
 </script>
