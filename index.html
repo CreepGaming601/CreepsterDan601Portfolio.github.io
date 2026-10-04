@@ -76,6 +76,7 @@ body {
             transparent 125px,
             transparent 220px
         );
+    background-size: 440px 440px;
     animation: diagonalScroll 18s linear infinite;
 }
 
@@ -99,10 +100,10 @@ body {
 
 @keyframes diagonalScroll {
     from {
-        transform: translate3d(0, 0, 0);
+        background-position: 0 0;
     }
     to {
-        transform: translate3d(260px, 260px, 0);
+        background-position: 440px 440px;
     }
 }
 
@@ -270,9 +271,23 @@ main {
     min-width: 0;
 }
 
+main section {
+    display: none;
+    min-height: calc(100vh - 150px);
+    margin: 0;
+    padding: 4px 0 70px;
+}
+
+main section.page-active {
+    display: block;
+}
+
+main > section:not(.page-active) {
+    display: none;
+}
+
 section {
     scroll-margin-top: 95px;
-    margin-bottom: 100px;
 }
 
 .hero {
@@ -402,7 +417,7 @@ section {
         linear-gradient(
             135deg,
             var(--green-dark),
-            #254d35
+            var(--surface-light)
         );
 
     display: grid;
@@ -519,7 +534,7 @@ section {
     margin-top: 10px;
     padding: 4px 8px;
     border-radius: 7px;
-    background: rgba(228,122,155,.12);
+    background: rgba(111,189,131,.12);
     color: var(--green-light);
     font-size: 11px;
 }
@@ -605,6 +620,125 @@ section {
     font-size: 12px;
 }
 
+
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.blog-card h3 {
+    margin: 10px 0 8px;
+}
+
+.blog-card p {
+    color: var(--muted);
+}
+
+.blog-toggle {
+    margin-top: 18px;
+}
+
+.blog-content {
+    display: none;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--line);
+}
+
+.blog-content.open {
+    display: block;
+}
+
+.schedule-heading {
+    align-items: center;
+}
+
+
+.schedule-intro {
+    margin-bottom: 18px;
+}
+
+.schedule-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: rgba(8, 24, 15, .55);
+}
+
+.schedule-grid {
+    min-width: 920px;
+    display: grid;
+    grid-template-columns: 95px repeat(7, minmax(115px, 1fr));
+    grid-auto-rows: 42px;
+    gap: 2px;
+    padding: 2px;
+}
+
+.schedule-cell {
+    min-width: 0;
+    background: rgba(25, 60, 41, .42);
+    border: 1px solid rgba(111,189,131,.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+.schedule-header {
+    background: var(--green);
+    color: #10291c;
+    font-weight: 900;
+    border-color: var(--green);
+    letter-spacing: .5px;
+}
+
+.time-cell {
+    background: rgba(15, 39, 27, .82);
+    color: var(--cream);
+    font-weight: 900;
+}
+
+.schedule-entry {
+    cursor: default;
+    color: var(--cream);
+    font-weight: 700;
+    transition: .25s ease;
+}
+
+.schedule-entry:hover {
+    border-color: var(--green);
+    background: rgba(111,189,131,.10);
+}
+
+
+.schedule-entry.has-content {
+    background: rgba(111,189,131,.13);
+    border-color: rgba(111,189,131,.45);
+    color: var(--cream);
+}
+
+.schedule-note {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.schedule-note span {
+    display: inline-block;
+    margin-right: 7px;
+    padding: 3px 7px;
+    border-radius: 5px;
+    background: var(--green);
+    color: #10291c;
+    font-weight: 900;
+}
+
 .modal {
     position: fixed;
     inset: 0;
@@ -662,20 +796,6 @@ footer {
     border-top: 1px solid var(--line);
 }
 
-body.light {
-    --bg: #e8f5ea;
-    --bg-2: #f4fbf5;
-    --surface: rgba(244,251,245,.94);
-    --surface-solid: #f1faf2;
-    --surface-light: #d2ead7;
-    --green: #3f8b55;
-    --green-light: #2f7042;
-    --green-dark: #79b887;
-    --cream: #173321;
-    --muted: #52715c;
-    --line: rgba(63,139,85,.28);
-    --shadow: rgba(25,65,38,.16);
-}
 
 @media (max-width: 950px) {
     .layout {
@@ -735,7 +855,63 @@ body.light {
         align-items: start;
         flex-direction: column;
     }
+
+    .schedule-heading {
+        align-items: start;
+    }
+
+    .blog-grid {
+        grid-template-columns: 1fr;
+    }
 }
+
+main section {
+    animation: pageFadeIn .45s ease both;
+}
+
+main section.page-active {
+    animation: pageFadeIn .45s ease both;
+}
+
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+        filter: blur(3px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+.side-nav a,
+.button,
+.work-card,
+.simple-panel,
+.chip,
+.art-frame,
+.schedule-entry {
+    transition:
+        opacity .25s ease,
+        transform .25s ease,
+        background-color .25s ease,
+        border-color .25s ease,
+        color .25s ease,
+        box-shadow .25s ease;
+}
+
+.side-nav a:hover,
+.button:hover {
+    transform: translateY(-2px);
+}
+
+.work-card:hover {
+    transform: translateY(-5px);
+}
+
 </style>
 </head>
 
@@ -756,13 +932,8 @@ body.light {
 
     <nav class="top-links" aria-label="Top navigation">
         <a href="#works">Works</a>
-        <a href="#characters">Characters</a>
         <a href="#contact">Contact</a>
-
-        <button class="theme-button" id="themeButton" type="button">
-            ☼
-        </button>
-    </nav>
+        </nav>
 
 </header>
 
@@ -795,20 +966,15 @@ body.light {
                 <span>03</span> Works
             </a>
 
-            <a href="#study">
-                <span>04</span> Study Zone
+            <a href="#schedule">
+                <span>04</span> Schedule
             </a>
 
             <a href="#blogs">
                 <span>05</span> Blogs
             </a>
-
-            <a href="#lounge">
-                <span>07</span> Visitor Lounge
-            </a>
-
-            <a href="#contact">
-                <span>08</span> Contacts
+<a href="#contact">
+                <span>07</span> Contacts
             </a>
 
         </nav>
@@ -849,6 +1015,15 @@ body.light {
                     </div>
 
                 </div>
+
+                <div class="hero-art">
+                    <div class="art-frame">
+                        <img
+                            src="images/my-art.png"
+                            alt="Artwork selected for the portfolio"
+                        >
+                        <div class="art-label">MY ART ✦</div>
+                    </div>
                 </div>
 
             </div>
@@ -1017,116 +1192,110 @@ body.light {
 
         </section>
 
-        <section id="study">
+        <section id="schedule" class="page-section">
 
-            <div class="section-heading">
+            <div class="section-heading schedule-heading">
                 <div>
-                    <div class="eyebrow">Notes & resources</div>
-                    <h2>Study Zone</h2>
+                    <div class="eyebrow">Current plans & practice</div>
+                    <h2>Weekly Schedule</h2>
+                </div></div>
+
+            <div class="simple-panel schedule-intro">
+                <p>Edit this schedule directly in the HTML file on GitHub. Add, remove, or change the text inside each schedule slot, then commit your changes to update the website.</p>
+            </div>
+
+            <div class="schedule-wrap">
+                <div class="schedule-grid" id="scheduleGrid">
+                    <div class="schedule-cell schedule-header time-header">TIME</div>
+                    <div class="schedule-cell schedule-header">MON</div>
+                    <div class="schedule-cell schedule-header">TUE</div>
+                    <div class="schedule-cell schedule-header">WED</div>
+                    <div class="schedule-cell schedule-header">THU</div>
+                    <div class="schedule-cell schedule-header">FRI</div>
+                    <div class="schedule-cell schedule-header">SAT</div>
+                    <div class="schedule-cell schedule-header">SUN</div>
                 </div>
             </div>
 
-            <div class="simple-panel">
-
-                <p>
-                    Turn this into a collection of tutorials, notes,
-                    references, school projects, resources, or progress logs.
-                </p>
-
-                <div class="chip-list">
-                    <span class="chip">Tutorials</span>
-                    <span class="chip">Notes</span>
-                    <span class="chip">References</span>
-                    <span class="chip">Resources</span>
-                </div>
-
+            <div class="schedule-note">
+                <span>TIP</span>
+                Double-click a box to edit it. Press Enter to finish.
             </div>
 
         </section>
+
 
         <section id="blogs">
 
             <div class="section-heading">
                 <div>
-                    <div class="eyebrow">Thoughts & updates</div>
+                    <div class="eyebrow">Notes from the process</div>
                     <h2>Blogs</h2>
                 </div>
+                <p>Updates, thoughts, experiments, and project progress.</p>
             </div>
 
-            <div class="simple-panel">
+            <div class="blog-grid">
 
-                <p>
-                    Add blog posts, development updates, artwork breakdowns,
-                    personal posts, or behind-the-scenes entries here.
-                </p>
+                <article class="simple-panel blog-card">
+                    <span class="work-tag">LATEST</span>
+                    <h3>What I'm Working On</h3>
+                    <p>
+                        Write about what you are currently making, what changed,
+                        what went wrong, and what you want to try next.
+                    </p>
+                    <button class="button secondary blog-toggle" type="button">
+                        Read Post
+                    </button>
+                    <div class="blog-content">
+                        <p>
+                            Replace this text with your own post. You can use this
+                            space for development notes, artwork progress,
+                            animation experiments, or anything else you want to document.
+                        </p>
+                    </div>
+                </article>
 
-                <div class="chip-list">
-                    <span class="chip">Devlog</span>
-                    <span class="chip">Art Process</span>
-                    <span class="chip">Updates</span>
-                </div>
+                <article class="simple-panel blog-card">
+                    <span class="work-tag">IDEAS</span>
+                    <h3>Things I Want To Try</h3>
+                    <p>
+                        Keep a running list of techniques, projects, concepts,
+                        or experiments you want to explore.
+                    </p>
+                    <button class="button secondary blog-toggle" type="button">
+                        Read Post
+                    </button>
+                    <div class="blog-content">
+                        <p>
+                            Add your own notes here whenever you have a new idea
+                            or something you want to experiment with.
+                        </p>
+                    </div>
+                </article>
 
-            </div>
-
-        </section>
-
-        <section id="characters">
-
-            <div class="section-heading">
-                <div>
-                    <div class="eyebrow">Characters & worlds</div>
-                    <h2>OC Compendium</h2>
-                </div>
-            </div>
-
-            <div class="simple-panel">
-
-                <p>
-                    This can eventually become a full character database.
-                    Give each OC a profile, artwork, lore, relationships,
-                    abilities, quotes, galleries, and more.
-                </p>
-
-                <div class="chip-list">
-                    <span class="chip">Characters</span>
-                    <span class="chip">Lore</span>
-                    <span class="chip">Worldbuilding</span>
-                    <span class="chip">Relationships</span>
-                </div>
-
-            </div>
-
-        </section>
-
-        <section id="lounge">
-
-            <div class="section-heading">
-                <div>
-                    <div class="eyebrow">For visitors</div>
-                    <h2>Visitor's Lounge</h2>
-                </div>
-            </div>
-
-            <div class="simple-panel">
-
-                <p id="visitorMessage">
-                    Welcome to the lounge. Press the button to leave a little
-                    greeting.
-                </p>
-
-                <button
-                    class="button primary"
-                    id="helloButton"
-                    type="button"
-                >
-                    Say Hello ♡
-                </button>
+                <article class="simple-panel blog-card">
+                    <span class="work-tag">PROGRESS</span>
+                    <h3>Progress Log</h3>
+                    <p>
+                        Document milestones and small improvements so you can
+                        look back at how your work developed.
+                    </p>
+                    <button class="button secondary blog-toggle" type="button">
+                        Read Post
+                    </button>
+                    <div class="blog-content">
+                        <p>
+                            Add progress entries here. Duplicate this card in the
+                            HTML whenever you want another post.
+                        </p>
+                    </div>
+                </article>
 
             </div>
 
         </section>
-
-        <section id="contact">
+<section id="contact">
 
             <div class="section-heading">
                 <div>
@@ -1173,7 +1342,7 @@ body.light {
         </section>
 
         <footer>
-            © 2026 YOUR NAME · Built with HTML, CSS & JavaScript
+            © 2026 CreepsterDan601 · Built with HTML, CSS & JavaScript
         </footer>
 
     </main>
@@ -1240,23 +1409,7 @@ body.light {
         });
 
     });
-
-    const themeButton =
-        document.getElementById("themeButton");
-
-    themeButton.addEventListener("click", function () {
-
-        document.body.classList.toggle("light");
-
-        const isLight =
-            document.body.classList.contains("light");
-
-        themeButton.textContent =
-            isLight ? "☾" : "☼";
-
-    });
-
-    const modal =
+const modal =
         document.getElementById("projectModal");
 
     const modalTitle =
@@ -1365,40 +1518,128 @@ body.light {
     const sections =
         document.querySelectorAll("main section");
 
-    const observer =
-        new IntersectionObserver(
-            function (entries) {
+    function showSection(id, updateHash) {
+        const target = document.getElementById(id) || document.getElementById("home");
 
-                entries.forEach(function (entry) {
+        sections.forEach(function (section) {
+            section.classList.toggle("page-active", section === target);
+        });
 
-                    if (!entry.isIntersecting) {
-                        return;
+        navLinks.forEach(function (link) {
+            link.classList.toggle(
+                "active",
+                link.getAttribute("href") === "#" + target.id
+            );
+        });
+
+        if (updateHash && history.replaceState) {
+            history.replaceState(null, "", "#" + target.id);
+        }
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+    document
+        .querySelectorAll('a[href^="#"]')
+        .forEach(function (link) {
+            link.addEventListener("click", function (event) {
+                const id = link.getAttribute("href").substring(1);
+
+                if (!document.getElementById(id)) {
+                    return;
+                }
+
+                event.preventDefault();
+                showSection(id, true);
+            });
+        });
+
+    const initialSection =
+        window.location.hash
+            ? window.location.hash.substring(1)
+            : "home";
+
+    showSection(initialSection, false);
+
+    const scheduleGrid =
+        document.getElementById("scheduleGrid");
+
+    const scheduleData = [
+        { day: "MON", time: "8:00 AM", text: "" },
+        { day: "TUE", time: "10:00 AM", text: "" },
+        { day: "WED", time: "1:00 PM", text: "" },
+        { day: "THU", time: "3:30 PM", text: "" },
+        { day: "FRI", time: "5:00 PM", text: "" },
+        { day: "SAT", time: "11:00 AM", text: "" },
+        { day: "SUN", time: "2:00 PM", text: "" }
+    ];
+
+    const days = [
+        "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"
+    ];
+
+    function formatTime(hour, minute) {
+        const suffix = hour >= 12 ? "PM" : "AM";
+        let displayHour = hour % 12;
+
+        if (displayHour === 0) {
+            displayHour = 12;
+        }
+
+        return displayHour + ":" +
+            String(minute).padStart(2, "0") +
+            " " + suffix;
+    }
+
+    function createSchedule() {
+        const existingEntries =
+            scheduleGrid.querySelectorAll(".schedule-entry");
+
+        existingEntries.forEach(function (entry) {
+            entry.remove();
+        });
+
+        for (let hour = 8; hour <= 21; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const time = formatTime(hour, minute);
+
+                const timeCell =
+                    document.createElement("div");
+
+                timeCell.className =
+                    "schedule-cell time-cell";
+
+                timeCell.textContent = time;
+                scheduleGrid.appendChild(timeCell);
+
+                days.forEach(function (day) {
+                    const entry =
+                        document.createElement("div");
+
+                    entry.className =
+                        "schedule-cell schedule-entry";
+
+                    const item =
+                        scheduleData.find(function (data) {
+                            return data.day === day &&
+                                data.time === time;
+                        });
+
+                    if (item && item.text) {
+                        entry.textContent = item.text;
+                        entry.classList.add("has-content");
                     }
 
-                    navLinks.forEach(function (link) {
-
-                        const target =
-                            link.getAttribute("href");
-
-                        link.classList.toggle(
-                            "active",
-                            target === "#" + entry.target.id
-                        );
-
-                    });
-
+                    scheduleGrid.appendChild(entry);
                 });
-
-            },
-            {
-                rootMargin:
-                    "-25% 0px -65% 0px"
             }
-        );
+        }
+    }
 
-    sections.forEach(function (section) {
-        observer.observe(section);
-    });
+    createSchedule();
 
 })();
 </script>
