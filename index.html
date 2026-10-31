@@ -722,6 +722,14 @@ section {
     object-fit: contain;
 }
 
+.modal-media iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    border: 0;
+    border-radius: 12px;
+}
+
 .modal-close {
     position: absolute;
     right: 14px;
@@ -1056,22 +1064,24 @@ body.light {
                     </div>
                 </article>
 
-                  <article
+                <article
                     class="work-card"
                     tabindex="0"
-                    data-title="Project Two"
-                    data-media-type="video"
-                    data-media="empty"
-                    data-description="Describe this project here. You can talk about the idea, process, tools, inspiration, and what you learned."
+                    data-title="Creative Control Short"
+                    data-media-type="youtube"
+                    data-media="odSNdT1a-g4"
+                    data-description="Was for a college group project since we needed to give our own works. I felt like making a whole new animation instead of reusing my old ones."
                 >
-                    <video class="work-video" muted loop autoplay playsinline preload="metadata">
-                        <source src="empty" type="video/mp4">
-                    </video>
+                    <img
+                        class="work-image"
+                        src="https://placehold.co/900x560/4b2938/fae8ed?text=YOUTUBE+VIDEO"
+                        alt="YouTube project preview"
+                    >
 
                     <div class="work-info">
-                        <h3>HW Showtime Short</h3>
+                        <h3>Creative Control Short</h3>
                         <p>3D Animation</p>
-                        <span class="work-tag">May ‎31, ‎2025</span>
+                        <span class="work-tag">‎October ‎28, ‎2026</span>
                     </div>
                 </article>
                 
@@ -1397,11 +1407,19 @@ body.light {
         const mediaType = card.dataset.mediaType || "image";
         const mediaPath = card.dataset.media || "";
 
-        if (mediaType === "video") {
+        if (mediaType === "youtube") {
+            const iframe = document.createElement("iframe");
+            iframe.src = "https://www.youtube.com/embed/" + mediaPath;
+            iframe.title = card.dataset.title || "YouTube video";
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+            iframe.allowFullscreen = true;
+            modalMedia.appendChild(iframe);
+        } else if (mediaType === "video") {
             const video = document.createElement("video");
             video.controls = true;
             video.autoplay = true;
             video.playsInline = true;
+            video.setAttribute("controlslist", "nodownload");
             video.src = mediaPath;
             video.setAttribute("aria-label", card.dataset.title || "Project video");
             modalMedia.appendChild(video);
