@@ -504,6 +504,14 @@ section {
     background: var(--surface-light);
 }
 
+.work-video {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    display: block;
+    background: var(--surface-light);
+}
+
 .work-info {
     padding: 16px;
 }
@@ -689,6 +697,29 @@ section {
 
 .modal-box p {
     color: var(--muted);
+}
+
+.modal-media {
+    width: 100%;
+    max-height: 70vh;
+    margin: 18px 0;
+    display: block;
+    object-fit: contain;
+    background: #06100a;
+    border-radius: 12px;
+}
+
+.modal-media video {
+    width: 100%;
+    max-height: 70vh;
+    display: block;
+}
+
+.modal-media img {
+    width: 100%;
+    max-height: 70vh;
+    display: block;
+    object-fit: contain;
 }
 
 .modal-close {
@@ -1010,13 +1041,13 @@ body.light {
                     class="work-card"
                     tabindex="0"
                     data-title="Project One"
+                    data-media-type="video"
+                    data-media="HW SHOWTIME SHORT - Trim.mp4"
                     data-description="Describe this project here. You can talk about the idea, process, tools, inspiration, and what you learned."
                 >
-                    <img
-                        class="work-image"
-                        src="HW SHOWTIME SHORT - Trim.mp4"
-                        alt="Project One"
-                    >
+                    <video class="work-video" muted loop autoplay playsinline preload="metadata">
+                        <source src="HW SHOWTIME SHORT - Trim.mp4" type="video/mp4">
+                    </video>
 
                     <div class="work-info">
                         <h3>Project One</h3>
@@ -1029,11 +1060,13 @@ body.light {
                     class="work-card"
                     tabindex="0"
                     data-title="Project Two"
+                    data-media-type="image"
+                    data-media="project-two.png"
                     data-description="Another project can have its own description and popup."
                 >
                     <img
                         class="work-image"
-                        src="https://placehold.co/900x560/4b2938/fae8ed?text=PROJECT+TWO"
+                        src="project-two.png"
                         alt="Project Two"
                     >
 
@@ -1048,11 +1081,13 @@ body.light {
                     class="work-card"
                     tabindex="0"
                     data-title="Project Three"
+                    data-media-type="image"
+                    data-media="project-three.png"
                     data-description="You can add as many projects as you want by copying one of these cards."
                 >
                     <img
                         class="work-image"
-                        src="https://placehold.co/900x560/4b2938/fae8ed?text=PROJECT+THREE"
+                        src="project-three.png"
                         alt="Project Three"
                     >
 
@@ -1067,11 +1102,13 @@ body.light {
                     class="work-card"
                     tabindex="0"
                     data-title="Project Four"
+                    data-media-type="image"
+                    data-media="project-four.png"
                     data-description="This could be a website, game, school project, comic, or anything else."
                 >
                     <img
                         class="work-image"
-                        src="https://placehold.co/900x560/4b2938/fae8ed?text=PROJECT+FOUR"
+                        src="project-four.png"
                         alt="Project Four"
                     >
 
@@ -1279,6 +1316,8 @@ body.light {
 
         <h2 id="modalTitle">Project</h2>
 
+        <div id="modalMedia" class="modal-media"></div>
+
         <p id="modalDescription"></p>
 
     </div>
@@ -1341,6 +1380,9 @@ body.light {
     const modalDescription =
         document.getElementById("modalDescription");
 
+    const modalMedia =
+        document.getElementById("modalMedia");
+
     const modalClose =
         document.getElementById("modalClose");
 
@@ -1351,6 +1393,26 @@ body.light {
 
         modalDescription.textContent =
             card.dataset.description || "";
+
+        modalMedia.innerHTML = "";
+
+        const mediaType = card.dataset.mediaType || "image";
+        const mediaPath = card.dataset.media || "";
+
+        if (mediaType === "video") {
+            const video = document.createElement("video");
+            video.controls = true;
+            video.autoplay = true;
+            video.playsInline = true;
+            video.src = mediaPath;
+            video.setAttribute("aria-label", card.dataset.title || "Project video");
+            modalMedia.appendChild(video);
+        } else {
+            const image = document.createElement("img");
+            image.src = mediaPath;
+            image.alt = card.dataset.title || "Project image";
+            modalMedia.appendChild(image);
+        }
 
         modal.classList.add("open");
 
