@@ -37,7 +37,6 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-snap-type: y proximity;
 }
 
 body {
@@ -281,22 +280,7 @@ main {
 
 section {
     scroll-margin-top: 95px;
-    min-height: calc(100svh - 72px);
-    margin-bottom: 0;
-    padding: 48px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    scroll-snap-align: start;
-}
-
-/* Each major part of the portfolio starts on its own screen. */
-main > section {
-    border-bottom: 1px solid rgba(111, 189, 131, .12);
-}
-
-main > section:last-of-type {
-    border-bottom: 0;
+    margin-bottom: 100px;
 }
 
 .hero {
@@ -892,12 +876,6 @@ body.light {
 
     .hero-art {
         min-height: 280px;
-    }
-
-    section {
-        min-height: calc(100svh - 62px);
-        padding: 36px 0;
-        scroll-margin-top: 70px;
     }
 
     .about-layout,
