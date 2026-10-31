@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="description" content="maybe the true portfolio were the friends we made along the way...">
 <title>creepsterdan601's horribly written portfolio</title>
 
@@ -46,6 +46,10 @@ body {
     color: #ffffff;
     font-family: "Trebuchet MS", Arial, sans-serif;
     line-height: 1.6;
+}
+
+body.modal-open {
+    overflow: hidden;
 }
 
 .background {
@@ -618,8 +622,8 @@ section {
     color: var(--muted);
 }
 
-.schedule-wrapper { width: 100%; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; border-radius: 16px; }
-.schedule-board { display: grid; grid-template-columns: 90px repeat(7, minmax(70px, 1fr)); min-width: 680px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+.schedule-wrapper { width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; border-radius: 16px; -webkit-overflow-scrolling: touch; }
+.schedule-board { display: grid; width: 680px; grid-template-columns: 90px repeat(7, 84px); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
 .schedule-corner, .schedule-day { padding: 12px 8px; background: var(--surface-light); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: #ffffff; font-size: 12px; font-weight: 900; text-align: center; }
 .schedule-times { display: grid; grid-template-rows: repeat(27, 30px); padding-top: 8px; color: var(--muted); font-size: 10px; text-align: right; }
 .schedule-times span { padding-right: 8px; }
@@ -720,12 +724,16 @@ section {
 
 .modal-media video {
     width: 100%;
+    height: auto;
     max-height: 70vh;
     display: block;
+    object-fit: contain;
 }
 
 .modal-media img {
     width: 100%;
+    height: auto;
+    max-width: 100%;
     max-height: 70vh;
     display: block;
     object-fit: contain;
@@ -733,6 +741,7 @@ section {
 
 .modal-media iframe {
     width: 100%;
+    max-width: 100%;
     aspect-ratio: 16 / 9;
     display: block;
     border: 0;
@@ -899,6 +908,18 @@ body.light {
     .modal-box {
         padding: 22px 16px 18px;
         max-height: 92vh;
+        width: min(100%, calc(100vw - 20px));
+        overflow-x: hidden;
+    }
+
+    .modal-media {
+        max-width: 100%;
+        max-height: 62vh;
+        overflow: hidden;
+    }
+
+    .schedule-board {
+        width: 680px;
     }
 }
 </style>
@@ -1500,6 +1521,7 @@ body.light {
         }
 
         modal.classList.add("open");
+        document.body.classList.add("modal-open");
 
         modalClose.focus();
 
@@ -1526,6 +1548,7 @@ body.light {
 
         modalMedia.innerHTML = "";
         modal.classList.remove("open");
+        document.body.classList.remove("modal-open");
 
     }
 
