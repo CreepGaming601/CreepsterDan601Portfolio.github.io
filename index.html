@@ -210,11 +210,12 @@ body {
 }
 
 .profile-mini {
-    padding: 18px;
+    padding: 20px;
     background: rgba(15, 39, 27, .68);
     border: 1px solid var(--line);
     border-radius: 18px;
     margin-bottom: 16px;
+    text-align: left;
 }
 
 h1, h2, h3, p, a, button, span, li, code { color: inherit; }
@@ -243,7 +244,11 @@ h1, h2, h3, p, a, button, span, li, code { color: inherit; }
 
 .side-nav {
     display: grid;
-    gap: 5px;
+    gap: 6px;
+    padding: 12px;
+    background: rgba(15, 39, 27, .45);
+    border: 1px solid var(--line);
+    border-radius: 18px;
 }
 
 .side-nav a {
@@ -778,7 +783,7 @@ body.light {
     .profile-mini {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 18px;
     }
 
     .avatar {
@@ -787,14 +792,38 @@ body.light {
     }
 
     .side-nav {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 700px) {
     .topbar {
-        padding: 10px 15px;
+        min-height: 62px;
+        padding: 9px 12px;
+    }
+
+    .brand {
+        min-width: 0;
+        gap: 8px;
+    }
+
+    .brand-name {
+        font-size: 13px;
+        letter-spacing: .5px;
+    }
+
+    .brand-subtitle {
+        max-width: 170px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .brand-mark {
+        width: 36px;
+        height: 36px;
+        flex: 0 0 auto;
     }
 
     .top-links a {
@@ -802,12 +831,47 @@ body.light {
     }
 
     .layout {
-        padding-top: 20px;
+        width: min(100% - 24px, 560px);
+        gap: 22px;
+        padding-top: 18px;
+        padding-bottom: 50px;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .profile-mini {
+        display: block;
+        padding: 18px;
+        text-align: center;
+    }
+
+    .avatar {
+        margin: 0 auto 12px;
+    }
+
+    .side-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        padding: 10px;
+    }
+
+    .side-nav a {
+        min-height: 44px;
+        padding: 10px 9px;
+        font-size: 14px;
+    }
+
+    .side-nav a:hover,
+    .side-nav a.active {
+        transform: none;
     }
 
     .hero {
         grid-template-columns: 1fr;
-        padding: 25px;
+        padding: 22px;
+        border-radius: 22px 8px 22px 8px;
     }
 
     .hero-art {
@@ -822,6 +886,15 @@ body.light {
     .section-heading {
         align-items: start;
         flex-direction: column;
+    }
+
+    .modal {
+        padding: 10px;
+    }
+
+    .modal-box {
+        padding: 22px 16px 18px;
+        max-height: 92vh;
     }
 }
 </style>
