@@ -623,7 +623,7 @@ section {
 }
 
 .schedule-wrapper { width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; border-radius: 16px; -webkit-overflow-scrolling: touch; }
-.schedule-board { display: grid; width: 680px; grid-template-columns: 90px repeat(7, 84px); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+.schedule-board { display: grid; width: 100%; min-width: 680px; grid-template-columns: 90px repeat(7, minmax(70px, 1fr)); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
 .schedule-corner, .schedule-day { padding: 12px 8px; background: var(--surface-light); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: #ffffff; font-size: 12px; font-weight: 900; text-align: center; }
 .schedule-times { display: grid; grid-template-rows: repeat(27, 30px); padding-top: 8px; color: var(--muted); font-size: 10px; text-align: right; }
 .schedule-times span { padding-right: 8px; }
@@ -919,7 +919,42 @@ body.light {
     }
 
     .schedule-board {
-        width: 680px;
+        width: 100%;
+        min-width: 0;
+        grid-template-columns: 52px repeat(7, minmax(0, 1fr));
+        border-radius: 12px;
+    }
+
+    .schedule-corner,
+    .schedule-day {
+        padding: 9px 2px;
+        font-size: 9px;
+    }
+
+    .schedule-times {
+        grid-template-rows: repeat(27, 27px);
+        padding-top: 5px;
+        font-size: 8px;
+    }
+
+    .schedule-times span {
+        padding-right: 4px;
+        white-space: nowrap;
+    }
+
+    .schedule-slots {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        grid-template-rows: repeat(27, 27px);
+        min-width: 0;
+        background: repeating-linear-gradient(to bottom, transparent 0, transparent 26px, var(--line) 26px, var(--line) 27px);
+    }
+
+    .schedule-event {
+        margin: 2px;
+        padding: 4px 2px;
+        border-radius: 5px;
+        font-size: 8px;
+        line-height: 1.15;
     }
 }
 </style>
