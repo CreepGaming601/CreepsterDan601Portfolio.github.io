@@ -1409,7 +1409,7 @@ body.light {
 
         if (mediaType === "youtube") {
             const iframe = document.createElement("iframe");
-            iframe.src = "https://www.youtube.com/embed/" + mediaPath;
+            iframe.src = "https://www.youtube.com/embed/" + mediaPath + "?autoplay=1&enablejsapi=1";
             iframe.title = card.dataset.title || "YouTube video";
             iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
             iframe.allowFullscreen = true;
@@ -1438,6 +1438,24 @@ body.light {
 
     function closeProject() {
 
+        // Stop and remove any media before hiding the modal.
+        const video = modalMedia.querySelector("video");
+
+        if (video) {
+            video.pause();
+            video.currentTime = 0;
+            video.removeAttribute("src");
+            video.load();
+        }
+
+        const iframe = modalMedia.querySelector("iframe");
+
+        if (iframe) {
+            // Removing the iframe stops the YouTube player completely.
+            iframe.src = "about:blank";
+        }
+
+        modalMedia.innerHTML = "";
         modal.classList.remove("open");
 
     }
