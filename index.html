@@ -66,10 +66,7 @@ body.modal-open {
 .background::before {
     content: "";
     position: absolute;
-    width: 180%;
-    height: 180%;
-    left: -40%;
-    top: -40%;
+    inset: 0;
     background:
         repeating-linear-gradient(
             -45deg,
@@ -80,8 +77,9 @@ body.modal-open {
             transparent 125px,
             transparent 220px
         );
-    animation: diagonalScroll 22s linear infinite;
-    will-change: transform;
+    background-size: auto;
+    animation: seamlessPattern 22s linear infinite;
+    will-change: background-position;
 }
 
 .background::after {
@@ -105,13 +103,13 @@ body.modal-open {
     will-change: transform;
 }
 
-@keyframes diagonalScroll {
+@keyframes seamlessPattern {
     from {
-        transform: translate3d(0, 0, 0);
+        background-position: 0 0;
     }
     to {
-        /* 220px matches the repeating pattern, so the loop has no jump. */
-        transform: translate3d(220px, 220px, 0);
+        /* One complete repeat of the pattern makes the loop seamless. */
+        background-position: 220px 220px;
     }
 }
 
