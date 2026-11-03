@@ -1254,8 +1254,8 @@ body.light .schedule-day {
                     data-media="HW SHOWTIME SHORT - Trim.mp4"
                     data-description="Made this when i was actually just beginning to learn Blender around grade 12. So for a first attempt, im pretty happy with it even till now!"
                 >
-                    <video class="work-video" muted loop autoplay playsinline preload="metadata">
-                        <source src="HW SHOWTIME SHORT - Trim.mp4" type="video/mp4">
+                    <video class="work-video" muted loop autoplay playsinline preload="none">
+                        <source data-src="HW SHOWTIME SHORT - Trim.mp4" type="video/mp4">
                     </video>
 
                     <div class="work-info">
@@ -1294,8 +1294,8 @@ body.light .schedule-day {
                     data-media="0001-0376.mp4"
                     data-description="Wanted to try animating more humanoid models since i had gotten to used to animatronic robot models."
                 >
-                    <video class="work-video" muted loop autoplay playsinline preload="metadata">
-                        <source src="0001-0376.mp4" type="video/mp4">
+                    <video class="work-video" muted loop autoplay playsinline preload="none">
+                        <source data-src="0001-0376.mp4" type="video/mp4">
                     </video>
 
                     <div class="work-info">
@@ -1313,8 +1313,8 @@ body.light .schedule-day {
                     data-media="witheredfreddylipsyncrobottestv2.mp4"
                     data-description="Literally made when i was just beginning to learn blender. I'm impressed till now to be honest."
                 >
-                    <video class="work-video" muted loop autoplay playsinline preload="metadata">
-                        <source src="witheredfreddylipsyncrobottestv2.mp4" type="video/mp4">
+                    <video class="work-video" muted loop autoplay playsinline preload="none">
+                        <source data-src="witheredfreddylipsyncrobottestv2.mp4" type="video/mp4">
                     </video>
 
                     <div class="work-info">
@@ -1353,8 +1353,8 @@ body.light .schedule-day {
                     data-media="finished anby animation.mp4"
                     data-description="One of the latest tests on how i can handle more humanoid models in terms of fluid movement. As i've animated alot of robots till this."
                 >
-                    <video class="work-video" muted loop autoplay playsinline preload="metadata">
-                        <source src="finished anby animation.mp4" type="video/mp4">
+                    <video class="work-video" muted loop autoplay playsinline preload="none">
+                        <source data-src="finished anby animation.mp4" type="video/mp4">
                     </video>
 
                     <div class="work-info">
@@ -1657,10 +1657,27 @@ body.light .schedule-day {
         video.volume = 0.35;
     });
 
-    // Play previews only while their project cards are the main visible focus.
+    // Load previews only near the viewport, then play them only while focused.
+    function loadPreview(video) {
+        if (video.dataset.loaded === "true") {
+            return;
+        }
+
+        const source = video.querySelector("source[data-src]");
+        if (source) {
+            source.src = source.dataset.src;
+            video.dataset.loaded = "true";
+            video.load();
+        }
+    }
+
     const previewObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
             const video = entry.target;
+
+            if (entry.isIntersecting) {
+                loadPreview(video);
+            }
 
             if (entry.isIntersecting && entry.intersectionRatio >= 0.6 && !document.hidden) {
                 video.play().catch(function () {
@@ -1671,6 +1688,7 @@ body.light .schedule-day {
             }
         });
     }, {
+        rootMargin: "300px 0px",
         threshold: [0, 0.6, 1]
     });
 
@@ -1689,6 +1707,7 @@ body.light .schedule-day {
                     card.getBoundingClientRect().bottom > window.innerHeight * 0.2;
 
                 if (visible) {
+                    loadPreview(video);
                     video.play().catch(function () {});
                 }
             }
@@ -1776,6 +1795,7 @@ body.light .schedule-day {
                 .forEach(function (video) {
                     const box = video.getBoundingClientRect();
                     if (box.top < window.innerHeight * 0.8 && box.bottom > window.innerHeight * 0.2) {
+                        loadPreview(video);
                         video.play().catch(function () {});
                     }
                 });
