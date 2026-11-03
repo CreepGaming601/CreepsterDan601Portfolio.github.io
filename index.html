@@ -136,7 +136,7 @@ body.light .modal-box {
     overflow: hidden;
     visibility: hidden;
     opacity: 0;
-    background: #020504;
+    background: #000000;
     pointer-events: none;
     --beat-strength: 0;
 }
@@ -151,10 +151,15 @@ body.light .modal-box {
     content: "";
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(circle at 50% 48%, rgba(255, 255, 255, .72), transparent 32%),
-        linear-gradient(90deg, rgba(255, 255, 255, .12), transparent 45%, rgba(255, 255, 255, .12));
-    opacity: calc(.08 + (var(--beat-strength) * .92));
+    background-color: #000000;
+    background-image:
+        radial-gradient(circle, rgba(255, 255, 255, .42) 0 1px, transparent 1.8px),
+        radial-gradient(circle, rgba(255, 255, 255, .3) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(255, 255, 255, .24) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(255, 255, 255, .18) 0 1px, transparent 1.5px);
+    background-size: 83px 97px, 137px 113px, 191px 157px, 251px 173px;
+    background-position: 13px 27px, 71px 9px, 31px 83px, 101px 47px;
+    opacity: calc(.04 + (var(--beat-strength) * .34));
     mix-blend-mode: screen;
     transition: opacity .04s linear;
 }
@@ -165,10 +170,10 @@ body.light .modal-box {
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    opacity: calc(.14 + (var(--beat-strength) * .86));
+    opacity: calc(.04 + (var(--beat-strength) * .22));
     background:
-        repeating-linear-gradient(0deg, transparent 0 3px, rgba(255, 255, 255, .2) 4px 5px),
-        linear-gradient(90deg, rgba(255, 255, 255, .16), transparent 30%, rgba(255, 255, 255, .1));
+        repeating-linear-gradient(0deg, transparent 0 3px, rgba(255, 255, 255, .12) 4px 5px),
+        linear-gradient(90deg, rgba(255, 255, 255, .08), transparent 30%, rgba(255, 255, 255, .06));
     mix-blend-mode: screen;
     transform: translateX(calc(var(--beat-strength) * 8px)) scaleY(calc(1 + (var(--beat-strength) * .025)));
     transition: opacity .04s linear, transform .04s linear;
@@ -206,7 +211,7 @@ body.light .modal-box {
 }
 
 .secret-overlay.playing .secret-video {
-    filter: brightness(calc(.72 + (var(--beat-strength) * .38))) contrast(calc(1 + (var(--beat-strength) * .4))) grayscale(.72);
+    filter: brightness(calc(.62 + (var(--beat-strength) * .24))) contrast(calc(1 + (var(--beat-strength) * .3))) grayscale(.78);
 }
 
 @keyframes secretDarken {
