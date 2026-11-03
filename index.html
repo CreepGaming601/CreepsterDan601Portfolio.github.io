@@ -152,8 +152,8 @@ body.light .modal-box {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(circle at 50% 48%, rgba(160, 255, 190, .72), transparent 32%),
-        linear-gradient(90deg, rgba(0, 255, 153, .28), rgba(255, 35, 90, .2));
+        radial-gradient(circle at 50% 48%, rgba(255, 255, 255, .72), transparent 32%),
+        linear-gradient(90deg, rgba(255, 255, 255, .12), transparent 45%, rgba(255, 255, 255, .12));
     opacity: calc(.08 + (var(--beat-strength) * .92));
     mix-blend-mode: screen;
     transition: opacity .04s linear;
@@ -167,8 +167,8 @@ body.light .modal-box {
     pointer-events: none;
     opacity: calc(.14 + (var(--beat-strength) * .86));
     background:
-        repeating-linear-gradient(0deg, transparent 0 3px, rgba(111, 189, 131, .18) 4px 5px),
-        linear-gradient(90deg, rgba(80, 255, 160, .18), transparent 30%, rgba(255, 60, 100, .12));
+        repeating-linear-gradient(0deg, transparent 0 3px, rgba(255, 255, 255, .2) 4px 5px),
+        linear-gradient(90deg, rgba(255, 255, 255, .16), transparent 30%, rgba(255, 255, 255, .1));
     mix-blend-mode: screen;
     transform: translateX(calc(var(--beat-strength) * 8px)) scaleY(calc(1 + (var(--beat-strength) * .025)));
     transition: opacity .04s linear, transform .04s linear;
@@ -195,8 +195,8 @@ body.light .modal-box {
     object-fit: contain;
     opacity: 0;
     transform: scale(.96);
-    border: 1px solid rgba(111, 189, 131, .55);
-    box-shadow: 0 0 70px rgba(111, 189, 131, .22);
+    border: 0;
+    box-shadow: 0 0 70px rgba(255, 255, 255, .12);
 }
 
 .secret-overlay.playing .secret-video {
@@ -206,7 +206,7 @@ body.light .modal-box {
 }
 
 .secret-overlay.playing .secret-video {
-    filter: brightness(calc(1 + (var(--beat-strength) * .32))) contrast(calc(1 + (var(--beat-strength) * .4))) saturate(calc(1 + (var(--beat-strength) * .55)));
+    filter: brightness(calc(.72 + (var(--beat-strength) * .38))) contrast(calc(1 + (var(--beat-strength) * .4))) grayscale(.72);
 }
 
 @keyframes secretDarken {
