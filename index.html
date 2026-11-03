@@ -1572,6 +1572,12 @@ body.light {
     const modalClose =
         document.getElementById("modalClose");
 
+    // Set only local MP4 previews to 35% volume.
+    // They remain muted in the cards so autoplay still works.
+    document.querySelectorAll(".work-video").forEach(function (video) {
+        video.volume = 0.35;
+    });
+
     function openProject(card) {
 
         modalTitle.textContent =
@@ -1597,6 +1603,7 @@ body.light {
             video.controls = true;
             video.autoplay = true;
             video.playsInline = true;
+            video.volume = 0.35;
             video.setAttribute("controlslist", "nodownload");
             video.src = mediaPath;
             video.setAttribute("aria-label", card.dataset.title || "Project video");
