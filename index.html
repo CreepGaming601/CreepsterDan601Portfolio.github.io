@@ -57,75 +57,32 @@ body.modal-open {
     inset: 0;
     z-index: -10;
     overflow: hidden;
-    background:
-        radial-gradient(circle at 20% 20%, rgba(111,189,131,.08), transparent 28%),
-        radial-gradient(circle at 80% 70%, rgba(49,95,66,.13), transparent 32%),
-        var(--bg);
+    background: var(--bg);
 }
 
-.background::before {
-    content: "";
+.background-video {
     position: absolute;
     inset: 0;
-    background:
-        repeating-linear-gradient(
-            -45deg,
-            transparent 0,
-            transparent 90px,
-            rgba(111,189,131,.055) 90px,
-            rgba(111,189,131,.055) 125px,
-            transparent 125px,
-            transparent 220px
-        );
-    background-size: auto;
-    animation: seamlessPattern 22s linear infinite;
-    will-change: background-position;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: .5;
+    pointer-events: none;
 }
 
 .background::after {
     content: "";
     position: absolute;
-    width: 720px;
-    height: 720px;
-    right: -260px;
-    top: 10%;
-    border-radius: 48% 52% 62% 38% / 38% 55% 45% 62%;
+    inset: 0;
     background:
-        linear-gradient(
-            135deg,
-            rgba(111,189,131,.13),
-            rgba(49,95,66,.02)
-        );
-    transform: rotate(-18deg);
-    box-shadow: 0 0 120px rgba(111,189,131,.08);
-    filter: blur(1px);
-    animation: floatShape 12s ease-in-out infinite alternate;
-    will-change: transform;
-}
-
-@keyframes seamlessPattern {
-    from {
-        background-position: 0 0;
-    }
-    to {
-        /* One complete repeat of the pattern makes the loop seamless. */
-        background-position: 220px 220px;
-    }
-}
-
-@keyframes floatShape {
-    from {
-        transform: translate3d(0, 0, 0) rotate(-18deg);
-    }
-    to {
-        transform: translate3d(-70px, 40px, 0) rotate(-10deg);
-    }
+        linear-gradient(rgba(3, 12, 7, .42), rgba(3, 12, 7, .42)),
+        radial-gradient(circle at 20% 20%, rgba(111,189,131,.12), transparent 35%);
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .background::before,
-    .background::after {
-        animation: none;
+    .background-video {
+        display: none;
     }
 }
 
@@ -965,7 +922,12 @@ body.light {
 
 <body>
 
-<div class="background" aria-hidden="true"></div>
+<div class="background" aria-hidden="true">
+    <!-- Replace background.mp4 with your own looping background video. -->
+    <video class="background-video" autoplay muted loop playsinline preload="auto">
+        <source src="steponupremixmap1.mp4" type="video/mp4">
+    </video>
+</div>
 
 <header class="topbar">
 
