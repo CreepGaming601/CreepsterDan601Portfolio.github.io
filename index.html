@@ -80,7 +80,8 @@ body.modal-open {
             transparent 125px,
             transparent 220px
         );
-    animation: diagonalScroll 18s linear infinite;
+    animation: diagonalScroll 22s linear infinite;
+    will-change: transform;
 }
 
 .background::after {
@@ -98,7 +99,10 @@ body.modal-open {
             rgba(49,95,66,.02)
         );
     transform: rotate(-18deg);
-    animation: floatShape 9s ease-in-out infinite alternate;
+    box-shadow: 0 0 120px rgba(111,189,131,.08);
+    filter: blur(1px);
+    animation: floatShape 12s ease-in-out infinite alternate;
+    will-change: transform;
 }
 
 @keyframes diagonalScroll {
@@ -106,7 +110,8 @@ body.modal-open {
         transform: translate3d(0, 0, 0);
     }
     to {
-        transform: translate3d(260px, 260px, 0);
+        /* 220px matches the repeating pattern, so the loop has no jump. */
+        transform: translate3d(220px, 220px, 0);
     }
 }
 
@@ -1578,7 +1583,50 @@ body.light {
         video.volume = 0.35;
     });
 
+    // Play previews only while their project cards are the main visible focus.
+    const previewObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            const video = entry.target;
+
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.6 && !document.hidden) {
+                video.play().catch(function () {
+                    // Autoplay may be blocked until the visitor interacts with the page.
+                });
+            } else {
+                video.pause();
+            }
+        });
+    }, {
+        threshold: [0, 0.6, 1]
+    });
+
+    document.querySelectorAll(".work-card[data-media-type='video'] .work-video")
+        .forEach(function (video) {
+            previewObserver.observe(video);
+        });
+
+    document.addEventListener("visibilitychange", function () {
+        document.querySelectorAll(".work-video").forEach(function (video) {
+            if (document.hidden) {
+                video.pause();
+            } else {
+                const card = video.closest(".work-card");
+                const visible = card && card.getBoundingClientRect().top < window.innerHeight * 0.8 &&
+                    card.getBoundingClientRect().bottom > window.innerHeight * 0.2;
+
+                if (visible) {
+                    video.play().catch(function () {});
+                }
+            }
+        });
+    });
+
     function openProject(card) {
+
+        // The modal becomes the main focus, so stop background previews.
+        document.querySelectorAll(".work-video").forEach(function (video) {
+            video.pause();
+        });
 
         modalTitle.textContent =
             card.dataset.title || "Project";
@@ -1644,6 +1692,17 @@ body.light {
         modalMedia.innerHTML = "";
         modal.classList.remove("open");
         document.body.classList.remove("modal-open");
+
+        // Let visible previews continue after the modal closes.
+        if (!document.hidden) {
+            document.querySelectorAll(".work-card[data-media-type='video'] .work-video")
+                .forEach(function (video) {
+                    const box = video.getBoundingClientRect();
+                    if (box.top < window.innerHeight * 0.8 && box.bottom > window.innerHeight * 0.2) {
+                        video.play().catch(function () {});
+                    }
+                });
+        }
 
     }
 
