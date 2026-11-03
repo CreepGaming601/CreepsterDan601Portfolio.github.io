@@ -54,8 +54,43 @@ body.modal-open {
 
 body.light .background::after {
     background:
-        linear-gradient(rgba(225, 241, 255, .48), rgba(225, 241, 255, .48)),
-        radial-gradient(circle at 20% 20%, rgba(74, 144, 190, .14), transparent 35%);
+        linear-gradient(rgba(31, 70, 91, .42), rgba(31, 70, 91, .42)),
+        radial-gradient(circle at 20% 20%, rgba(104, 166, 196, .18), transparent 35%);
+}
+
+body.light .background {
+    background: #a9c5d3;
+}
+
+body.light .background-video {
+    opacity: .22;
+}
+
+body.light .hero {
+    background:
+        linear-gradient(135deg, rgba(205, 229, 240, .96), rgba(143, 181, 199, .94));
+    box-shadow: 0 25px 60px rgba(38, 77, 96, .22);
+}
+
+body.light .hero::after {
+    background: #6eafc7;
+    opacity: .16;
+}
+
+body.light .profile-mini,
+body.light .side-nav,
+body.light .info-card,
+body.light .simple-panel {
+    background: rgba(204, 228, 239, .88);
+}
+
+body.light .work-card,
+body.light .accordion button {
+    background: rgba(215, 235, 244, .92);
+}
+
+body.light .accordion-content {
+    background: rgba(187, 216, 230, .92);
 }
 
 body.light .topbar {
@@ -64,6 +99,11 @@ body.light .topbar {
 
 body.light .modal.open {
     background: rgba(34, 70, 96, .58);
+}
+
+body.light .modal-box {
+    background: #d3e8f1;
+    border-color: #347f9c;
 }
 
 .background {
