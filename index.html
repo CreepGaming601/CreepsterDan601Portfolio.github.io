@@ -151,8 +151,12 @@ body.light .modal-box {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle, rgba(111, 189, 131, .18), transparent 55%);
-    opacity: 0;
+    background:
+        radial-gradient(circle at 50% 48%, rgba(160, 255, 190, .72), transparent 32%),
+        linear-gradient(90deg, rgba(0, 255, 153, .28), rgba(255, 35, 90, .2));
+    opacity: calc(.08 + (var(--beat-strength) * .92));
+    mix-blend-mode: screen;
+    transition: opacity .04s linear;
 }
 
 .secret-overlay::after {
@@ -161,12 +165,13 @@ body.light .modal-box {
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    opacity: calc(.08 + (var(--beat-strength) * .42));
+    opacity: calc(.14 + (var(--beat-strength) * .86));
     background:
         repeating-linear-gradient(0deg, transparent 0 3px, rgba(111, 189, 131, .18) 4px 5px),
         linear-gradient(90deg, rgba(80, 255, 160, .18), transparent 30%, rgba(255, 60, 100, .12));
     mix-blend-mode: screen;
-    transform: translateX(calc(var(--beat-strength) * 4px));
+    transform: translateX(calc(var(--beat-strength) * 8px)) scaleY(calc(1 + (var(--beat-strength) * .025)));
+    transition: opacity .04s linear, transform .04s linear;
 }
 
 .secret-overlay.darkening::before {
@@ -201,7 +206,7 @@ body.light .modal-box {
 }
 
 .secret-overlay.playing .secret-video {
-    filter: contrast(calc(1 + (var(--beat-strength) * .25))) saturate(calc(1 + (var(--beat-strength) * .35)));
+    filter: brightness(calc(1 + (var(--beat-strength) * .32))) contrast(calc(1 + (var(--beat-strength) * .4))) saturate(calc(1 + (var(--beat-strength) * .55)));
 }
 
 @keyframes secretDarken {
@@ -1833,12 +1838,14 @@ body.light .schedule-day {
         const frequencies = new Uint8Array(secretAnalyser.frequencyBinCount);
         secretAnalyser.getByteFrequencyData(frequencies);
 
+        // Bass and lower-mid frequencies usually carry the strongest beat.
+        const beatBins = Math.min(28, frequencies.length);
         let total = 0;
-        for (let index = 0; index < frequencies.length; index += 1) {
+        for (let index = 0; index < beatBins; index += 1) {
             total += frequencies[index];
         }
 
-        const strength = Math.min(1, (total / frequencies.length) / 105);
+        const strength = Math.min(1, (total / beatBins) / 72);
         secretOverlay.style.setProperty("--beat-strength", strength.toFixed(3));
         secretBeatFrame = requestAnimationFrame(followSecretBeat);
     }
