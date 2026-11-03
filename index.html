@@ -43,13 +43,27 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     background: var(--bg);
-    color: #ffffff;
+    color: var(--cream);
     font-family: "Trebuchet MS", Arial, sans-serif;
     line-height: 1.6;
 }
 
 body.modal-open {
     overflow: hidden;
+}
+
+body.light .background::after {
+    background:
+        linear-gradient(rgba(225, 241, 255, .48), rgba(225, 241, 255, .48)),
+        radial-gradient(circle at 20% 20%, rgba(74, 144, 190, .14), transparent 35%);
+}
+
+body.light .topbar {
+    background: rgba(221, 239, 252, .82);
+}
+
+body.light .modal.open {
+    background: rgba(34, 70, 96, .58);
 }
 
 .background {
@@ -729,18 +743,23 @@ footer {
 }
 
 body.light {
-    --bg: #e8f5ea;
-    --bg-2: #f4fbf5;
-    --surface: rgba(244,251,245,.94);
-    --surface-solid: #f1faf2;
-    --surface-light: #d2ead7;
-    --green: #3f8b55;
-    --green-light: #2f7042;
-    --green-dark: #79b887;
-    --cream: #173321;
-    --muted: #52715c;
-    --line: rgba(63,139,85,.28);
-    --shadow: rgba(25,65,38,.16);
+    --bg: #dceefa;
+    --bg-2: #f4faff;
+    --surface: rgba(239, 248, 255, .92);
+    --surface-solid: #eff8ff;
+    --surface-light: #c8e4f4;
+    --green: #347f9c;
+    --green-light: #27687f;
+    --green-dark: #5b9fba;
+    --cream: #16384b;
+    --muted: #416579;
+    --line: rgba(52, 127, 156, .32);
+    --shadow: rgba(38, 91, 116, .18);
+}
+
+body.light .schedule-corner,
+body.light .schedule-day {
+    color: var(--cream);
 }
 
 @media (max-width: 950px) {
@@ -1510,6 +1529,34 @@ body.light {
     const themeButton =
         document.getElementById("themeButton");
 
+    const backgroundVideo =
+        document.querySelector(".background-video");
+
+    function pauseBackground() {
+        if (backgroundVideo) {
+            backgroundVideo.pause();
+        }
+    }
+
+    function resumeBackground() {
+        if (backgroundVideo && !document.hidden && !document.body.classList.contains("modal-open")) {
+            backgroundVideo.play().catch(function () {
+                // Browsers may delay autoplay until the first user interaction.
+            });
+        }
+    }
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            pauseBackground();
+        } else {
+            resumeBackground();
+        }
+    });
+
+    window.addEventListener("blur", pauseBackground);
+    window.addEventListener("focus", resumeBackground);
+
     themeButton.addEventListener("click", function () {
 
         document.body.classList.toggle("light");
@@ -1583,6 +1630,8 @@ body.light {
 
     function openProject(card) {
 
+        pauseBackground();
+
         // The modal becomes the main focus, so stop background previews.
         document.querySelectorAll(".work-video").forEach(function (video) {
             video.pause();
@@ -1652,6 +1701,7 @@ body.light {
         modalMedia.innerHTML = "";
         modal.classList.remove("open");
         document.body.classList.remove("modal-open");
+        resumeBackground();
 
         // Let visible previews continue after the modal closes.
         if (!document.hidden) {
