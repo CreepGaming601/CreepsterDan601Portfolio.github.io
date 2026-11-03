@@ -139,12 +139,21 @@ body.light .modal-box {
     background: #000000;
     pointer-events: none;
     --beat-strength: 0;
+    transition: opacity 1s ease, visibility 0s linear 1s;
 }
 
 .secret-overlay.active {
     visibility: visible;
     opacity: 1;
     pointer-events: auto;
+    transition: opacity 1s ease, visibility 0s linear 0s;
+}
+
+.secret-overlay.closing {
+    visibility: visible;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.2s ease, visibility 0s linear 1.2s;
 }
 
 .secret-overlay::before {
@@ -152,14 +161,8 @@ body.light .modal-box {
     position: absolute;
     inset: 0;
     background-color: #000000;
-    background-image:
-        radial-gradient(circle, rgba(255, 255, 255, .42) 0 1px, transparent 1.8px),
-        radial-gradient(circle, rgba(255, 255, 255, .3) 0 1px, transparent 1.7px),
-        radial-gradient(circle, rgba(255, 255, 255, .24) 0 1px, transparent 1.6px),
-        radial-gradient(circle, rgba(255, 255, 255, .18) 0 1px, transparent 1.5px);
-    background-size: 83px 97px, 137px 113px, 191px 157px, 251px 173px;
-    background-position: 13px 27px, 71px 9px, 31px 83px, 101px 47px;
-    opacity: calc(.04 + (var(--beat-strength) * .34));
+    background-image: var(--secret-dots, none);
+    opacity: calc(.025 + (var(--beat-strength) * .24));
     mix-blend-mode: screen;
     transition: opacity .04s linear;
 }
@@ -1816,6 +1819,20 @@ body.light .schedule-day {
     let secretAudioContext;
     let secretAnalyser;
     let secretAudioSource;
+    let secretBeatLevel = 0;
+
+    function randomizeSecretDots() {
+        const dots = [];
+        for (let index = 0; index < 90; index += 1) {
+            const x = Math.floor(Math.random() * 101);
+            const y = Math.floor(Math.random() * 101);
+            const size = Math.random() < .82 ? 1 : 2;
+            const opacity = (.14 + Math.random() * .26).toFixed(2);
+            dots.push(`radial-gradient(circle at ${x}% ${y}%, rgba(255,255,255,${opacity}) 0 ${size}px, transparent ${size + 1.5}px)`);
+        }
+        secretOverlay.style.setProperty("--secret-dots", dots.join(","));
+        secretOverlay.style.setProperty("--beat-strength", "0");
+    }
 
     function setupSecretAudio() {
         if (secretAnalyser) {
@@ -1850,16 +1867,24 @@ body.light .schedule-day {
             total += frequencies[index];
         }
 
-        const strength = Math.min(1, (total / beatBins) / 72);
-        secretOverlay.style.setProperty("--beat-strength", strength.toFixed(3));
+        const rawStrength = Math.min(1, (total / beatBins) / 58);
+        // Fast attack and gentle release make the dots flash on the musical beat.
+        secretBeatLevel = rawStrength > secretBeatLevel
+            ? secretBeatLevel + (rawStrength - secretBeatLevel) * .72
+            : secretBeatLevel + (rawStrength - secretBeatLevel) * .18;
+        secretOverlay.style.setProperty("--beat-strength", secretBeatLevel.toFixed(3));
         secretBeatFrame = requestAnimationFrame(followSecretBeat);
     }
 
     function finishSecretSequence() {
+        if (secretOverlay.classList.contains("closing")) {
+            return;
+        }
         cancelAnimationFrame(secretBeatFrame);
         secretOverlay.style.setProperty("--beat-strength", "0");
         secretOverlay.classList.remove("playing");
         secretOverlay.classList.add("lighting");
+        secretOverlay.classList.add("closing");
         secretVideo.style.animation = "secretGlitchOut 1.4s ease-in forwards";
         secretVideo.pause();
 
@@ -1870,7 +1895,7 @@ body.light .schedule-day {
             secretOverlay.setAttribute("aria-hidden", "true");
             document.body.classList.remove("secret-open");
             resumeBackground();
-        }, 1900);
+        }, 1400);
     }
 
     secretButton.addEventListener("click", function () {
@@ -1878,6 +1903,7 @@ body.light .schedule-day {
         pauseBackground();
         document.body.classList.add("secret-open");
         secretOverlay.className = "secret-overlay active darkening";
+        randomizeSecretDots();
         secretOverlay.setAttribute("aria-hidden", "false");
         secretVideo.currentTime = 0;
         secretVideo.volume = 0.25;
