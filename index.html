@@ -52,6 +52,10 @@ body.modal-open {
     overflow: hidden;
 }
 
+body.secret-open {
+    overflow: hidden;
+}
+
 body.light .background::after {
     background:
         linear-gradient(rgba(31, 70, 91, .42), rgba(31, 70, 91, .42)),
@@ -104,6 +108,101 @@ body.light .modal.open {
 body.light .modal-box {
     background: #d3e8f1;
     border-color: #347f9c;
+}
+
+.secret-button {
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 6px 9px;
+    font: inherit;
+    cursor: pointer;
+    opacity: .7;
+}
+
+.secret-button:hover {
+    color: var(--green);
+    border-color: var(--green);
+    opacity: 1;
+}
+
+.secret-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    background: #020504;
+    pointer-events: none;
+}
+
+.secret-overlay.active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.secret-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(111, 189, 131, .18), transparent 55%);
+    opacity: 0;
+}
+
+.secret-overlay.darkening::before {
+    animation: secretDarken 1.8s ease-in forwards;
+}
+
+.secret-overlay.playing::before {
+    opacity: .35;
+    animation: secretPulse 2.8s ease-in-out infinite;
+}
+
+.secret-overlay.lighting::before {
+    animation: secretLights 1.8s ease-out forwards;
+}
+
+.secret-video {
+    position: relative;
+    z-index: 1;
+    width: min(92vw, 1100px);
+    max-height: 88vh;
+    object-fit: contain;
+    opacity: 0;
+    transform: scale(.96);
+    border: 1px solid rgba(111, 189, 131, .55);
+    box-shadow: 0 0 70px rgba(111, 189, 131, .22);
+}
+
+.secret-overlay.playing .secret-video {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity .8s ease, transform 1.2s cubic-bezier(.16, 1, .3, 1);
+}
+
+@keyframes secretDarken {
+    0%, 100% { opacity: 0; }
+    35% { opacity: .22; }
+    55% { opacity: .04; }
+    75% { opacity: .5; }
+}
+
+@keyframes secretPulse {
+    0%, 100% { opacity: .18; filter: hue-rotate(0deg); }
+    50% { opacity: .5; filter: hue-rotate(35deg); }
+}
+
+@keyframes secretLights {
+    0% { opacity: .55; }
+    30% { opacity: .08; }
+    55% { opacity: .7; }
+    75% { opacity: .16; }
+    100% { opacity: 0; }
 }
 
 .background {
@@ -991,6 +1090,16 @@ body.light .schedule-day {
         padding: 3px 7px;
     }
 
+    .secret-button {
+        padding: 5px 7px;
+        font-size: 12px;
+    }
+
+    .secret-video {
+        width: 96vw;
+        max-height: 78vh;
+    }
+
     .work-grid {
         gap: 12px;
     }
@@ -1067,6 +1176,10 @@ body.light .schedule-day {
     </a>
 
     <nav class="top-links" aria-label="Top navigation">
+
+        <button class="secret-button" id="secretButton" type="button" aria-label="Open secret sequence">
+            ✦
+        </button>
 
         <button class="theme-button" id="themeButton" type="button">
             ☼
@@ -1601,6 +1714,12 @@ body.light .schedule-day {
 
 </div>
 
+<div class="secret-overlay" id="secretOverlay" aria-hidden="true">
+    <video class="secret-video" id="secretVideo" playsinline preload="auto">
+        <source src="secret1.mp4" type="video/mp4">
+    </video>
+</div>
+
 <script>
 
 (function () {
@@ -1638,6 +1757,51 @@ body.light .schedule-day {
 
     const backgroundVideo =
         document.querySelector(".background-video");
+
+    const secretButton =
+        document.getElementById("secretButton");
+
+    const secretOverlay =
+        document.getElementById("secretOverlay");
+
+    const secretVideo =
+        document.getElementById("secretVideo");
+
+    let secretTimer;
+
+    function finishSecretSequence() {
+        secretOverlay.classList.remove("playing");
+        secretOverlay.classList.add("lighting");
+        secretVideo.pause();
+
+        secretTimer = setTimeout(function () {
+            secretVideo.currentTime = 0;
+            secretOverlay.className = "secret-overlay";
+            secretOverlay.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("secret-open");
+            resumeBackground();
+        }, 1900);
+    }
+
+    secretButton.addEventListener("click", function () {
+        clearTimeout(secretTimer);
+        pauseBackground();
+        document.body.classList.add("secret-open");
+        secretOverlay.className = "secret-overlay active darkening";
+        secretOverlay.setAttribute("aria-hidden", "false");
+        secretVideo.currentTime = 0;
+
+        secretTimer = setTimeout(function () {
+            secretOverlay.classList.remove("darkening");
+            secretOverlay.classList.add("playing");
+            secretVideo.play().catch(function () {
+                // The sequence was started by a click, so playback should be allowed.
+            });
+        }, 1800);
+    });
+
+    secretVideo.addEventListener("ended", finishSecretSequence);
+    secretVideo.addEventListener("error", finishSecretSequence);
 
     function pauseBackground() {
         if (backgroundVideo) {
