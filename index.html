@@ -322,6 +322,20 @@ body.light .modal-box {
     font-weight: 900;
 }
 
+.brand-mark.secret-button {
+    border: 0;
+    padding: 0;
+    opacity: 1;
+    font-size: 17px;
+}
+
+.brand-mark.secret-button:hover {
+    color: #0d2416;
+    border: 0;
+    filter: brightness(1.12);
+    transform: rotate(-8deg) scale(1.06);
+}
+
 .brand-name {
     font-weight: 900;
     letter-spacing: 1px;
@@ -1213,20 +1227,18 @@ body.light .schedule-day {
 
 <header class="topbar">
 
-    <a class="brand" href="#home">
-        <span class="brand-mark">✦</span>
+    <div class="brand">
+        <button class="brand-mark secret-button" id="secretButton" type="button" aria-label="Open secret sequence">
+            ✦
+        </button>
 
         <span>
             <span class="brand-name">CreepsterDan601</span>
             <span class="brand-subtitle">(PORTFOLIUS PURGATORIUS)</span>
         </span>
-    </a>
+    </div>
 
     <nav class="top-links" aria-label="Top navigation">
-
-        <button class="secret-button" id="secretButton" type="button" aria-label="Open secret sequence">
-            ✦
-        </button>
 
         <button class="theme-button" id="themeButton" type="button">
             ☼
