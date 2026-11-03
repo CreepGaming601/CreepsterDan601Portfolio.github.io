@@ -138,6 +138,7 @@ body.light .modal-box {
     opacity: 0;
     background: #020504;
     pointer-events: none;
+    --beat-strength: 0;
 }
 
 .secret-overlay.active {
@@ -152,6 +153,20 @@ body.light .modal-box {
     inset: 0;
     background: radial-gradient(circle, rgba(111, 189, 131, .18), transparent 55%);
     opacity: 0;
+}
+
+.secret-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: calc(.08 + (var(--beat-strength) * .42));
+    background:
+        repeating-linear-gradient(0deg, transparent 0 3px, rgba(111, 189, 131, .18) 4px 5px),
+        linear-gradient(90deg, rgba(80, 255, 160, .18), transparent 30%, rgba(255, 60, 100, .12));
+    mix-blend-mode: screen;
+    transform: translateX(calc(var(--beat-strength) * 4px));
 }
 
 .secret-overlay.darkening::before {
@@ -185,6 +200,10 @@ body.light .modal-box {
     transition: opacity .8s ease, transform 1.2s cubic-bezier(.16, 1, .3, 1);
 }
 
+.secret-overlay.playing .secret-video {
+    filter: contrast(calc(1 + (var(--beat-strength) * .25))) saturate(calc(1 + (var(--beat-strength) * .35)));
+}
+
 @keyframes secretDarken {
     0%, 100% { opacity: 0; }
     35% { opacity: .22; }
@@ -203,6 +222,21 @@ body.light .modal-box {
     55% { opacity: .7; }
     75% { opacity: .16; }
     100% { opacity: 0; }
+}
+
+@keyframes secretGlitchIn {
+    0% { clip-path: inset(50% 0 50% 0); filter: brightness(.2) saturate(0); }
+    35% { clip-path: inset(8% 0 70% 0); filter: brightness(1.4) saturate(1.5); }
+    55% { clip-path: inset(65% 0 12% 0); }
+    75% { clip-path: inset(3% 0 3% 0); filter: brightness(.7) saturate(1.2); }
+    100% { clip-path: inset(0); filter: none; }
+}
+
+@keyframes secretGlitchOut {
+    0% { clip-path: inset(0); opacity: 1; }
+    35% { clip-path: inset(4% 0 60% 0); transform: translateX(-5px); }
+    65% { clip-path: inset(58% 0 5% 0); transform: translateX(4px); }
+    100% { clip-path: inset(50% 0 50% 0); opacity: 0; }
 }
 
 .background {
@@ -1768,14 +1802,58 @@ body.light .schedule-day {
         document.getElementById("secretVideo");
 
     let secretTimer;
+    let secretBeatFrame;
+    let secretAudioContext;
+    let secretAnalyser;
+    let secretAudioSource;
+
+    function setupSecretAudio() {
+        if (secretAnalyser) {
+            return;
+        }
+
+        try {
+            secretAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+            secretAnalyser = secretAudioContext.createAnalyser();
+            secretAnalyser.fftSize = 256;
+            secretAudioSource = secretAudioContext.createMediaElementSource(secretVideo);
+            secretAudioSource.connect(secretAnalyser);
+            secretAnalyser.connect(secretAudioContext.destination);
+        } catch (error) {
+            secretAnalyser = null;
+        }
+    }
+
+    function followSecretBeat() {
+        if (!secretAnalyser || secretVideo.paused) {
+            secretOverlay.style.setProperty("--beat-strength", "0");
+            return;
+        }
+
+        const frequencies = new Uint8Array(secretAnalyser.frequencyBinCount);
+        secretAnalyser.getByteFrequencyData(frequencies);
+
+        let total = 0;
+        for (let index = 0; index < frequencies.length; index += 1) {
+            total += frequencies[index];
+        }
+
+        const strength = Math.min(1, (total / frequencies.length) / 105);
+        secretOverlay.style.setProperty("--beat-strength", strength.toFixed(3));
+        secretBeatFrame = requestAnimationFrame(followSecretBeat);
+    }
 
     function finishSecretSequence() {
+        cancelAnimationFrame(secretBeatFrame);
+        secretOverlay.style.setProperty("--beat-strength", "0");
         secretOverlay.classList.remove("playing");
         secretOverlay.classList.add("lighting");
+        secretVideo.style.animation = "secretGlitchOut 1.4s ease-in forwards";
         secretVideo.pause();
 
         secretTimer = setTimeout(function () {
             secretVideo.currentTime = 0;
+            secretVideo.style.animation = "";
             secretOverlay.className = "secret-overlay";
             secretOverlay.setAttribute("aria-hidden", "true");
             document.body.classList.remove("secret-open");
@@ -1790,13 +1868,21 @@ body.light .schedule-day {
         secretOverlay.className = "secret-overlay active darkening";
         secretOverlay.setAttribute("aria-hidden", "false");
         secretVideo.currentTime = 0;
+        secretVideo.volume = 0.25;
+        secretVideo.style.animation = "secretGlitchIn 1.8s ease-out forwards";
 
         secretTimer = setTimeout(function () {
             secretOverlay.classList.remove("darkening");
             secretOverlay.classList.add("playing");
+            setupSecretAudio();
+            if (secretAudioContext && secretAudioContext.state === "suspended") {
+                secretAudioContext.resume();
+            }
             secretVideo.play().catch(function () {
                 // The sequence was started by a click, so playback should be allowed.
             });
+            cancelAnimationFrame(secretBeatFrame);
+            secretBeatFrame = requestAnimationFrame(followSecretBeat);
         }, 1800);
     });
 
