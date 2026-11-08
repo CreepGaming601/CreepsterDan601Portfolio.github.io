@@ -355,7 +355,8 @@ body.light .modal-box {
 }
 
 .top-links a,
-.theme-button {
+.theme-button,
+.music-control button {
     color: var(--muted);
     text-decoration: none;
     border: 0;
@@ -367,10 +368,16 @@ body.light .modal-box {
 }
 
 .top-links a:hover,
-.theme-button:hover {
+.theme-button:hover,
+.music-control button:hover {
     background: var(--surface-light);
     color: var(--cream);
 }
+
+.music-control { display: flex; align-items: center; gap: 2px; }
+.music-control button { padding: 7px 8px; }
+.music-control button[aria-pressed="true"] { color: var(--green); }
+.music-volume { width: 72px; accent-color: var(--green); }
 
 .layout {
     width: min(1250px, calc(100% - 40px));
@@ -1041,6 +1048,19 @@ body.light .schedule-day {
         display: none;
     }
 
+    .music-control {
+        gap: 0;
+    }
+
+    .music-control button {
+        padding: 5px 4px;
+        font-size: 11px;
+    }
+
+    .music-volume {
+        width: 48px;
+    }
+
     .layout {
         width: min(100% - 24px, 560px);
         gap: 22px;
@@ -1262,6 +1282,14 @@ body.light .schedule-day {
     </div>
 
     <nav class="top-links" aria-label="Top navigation">
+
+        <div class="music-control" aria-label="Background music controls">
+            <button id="musicToggle" type="button" aria-label="Play music" aria-pressed="false">▶</button>
+            <button id="musicPrevious" type="button" aria-label="Previous track">|◀</button>
+            <button id="musicNext" type="button" aria-label="Next track">▶|</button>
+            <button id="musicMute" type="button" aria-label="Mute music" aria-pressed="false">🔊</button>
+            <input class="music-volume" id="musicVolume" type="range" min="0" max="1" step="0.01" value="0.25" aria-label="Music volume">
+        </div>
 
         <button class="theme-button" id="themeButton" type="button">
             ☼
@@ -1808,6 +1836,8 @@ body.light .schedule-day {
     </video>
 </div>
 
+<audio id="backgroundMusic" preload="metadata"></audio>
+
 <script>
 
 (function () {
@@ -1845,6 +1875,105 @@ body.light .schedule-day {
 
     const backgroundVideo =
         document.querySelector(".background-video");
+
+    const musicAudio =
+        document.getElementById("backgroundMusic");
+
+    const musicToggle =
+        document.getElementById("musicToggle");
+
+    const musicPrevious =
+        document.getElementById("musicPrevious");
+
+    const musicNext =
+        document.getElementById("musicNext");
+
+    const musicMute =
+        document.getElementById("musicMute");
+
+    const musicVolume =
+        document.getElementById("musicVolume");
+
+    // Add or replace filenames here with your own MP3/OGG music files.
+    const musicTracks = [
+        "BIRDBRAIN 1.mp3",
+        "Big and Bad 1.mp3",
+        "A Humans Touch 1.mp3"
+    ];
+
+    let musicTrackIndex = 0;
+    let musicWasPlaying = false;
+
+    function loadMusicTrack(index, autoplay) {
+        musicTrackIndex = (index + musicTracks.length) % musicTracks.length;
+        musicAudio.src = musicTracks[musicTrackIndex];
+        musicAudio.volume = Number(musicVolume.value);
+        if (autoplay) {
+            musicAudio.play().catch(function () {});
+        }
+    }
+
+    function pauseMusic() {
+        if (!musicAudio.paused) {
+            musicWasPlaying = true;
+            musicAudio.pause();
+        }
+    }
+
+    function resumeMusic() {
+        if (musicWasPlaying && !document.hidden && document.hasFocus() && !document.body.classList.contains("modal-open")) {
+            musicAudio.play().catch(function () {});
+        }
+    }
+
+    function updateMusicButton() {
+        const playing = !musicAudio.paused;
+        musicToggle.textContent = playing ? "Ⅱ" : "▶";
+        musicToggle.setAttribute("aria-label", playing ? "Pause music" : "Play music");
+        musicToggle.setAttribute("aria-pressed", String(playing));
+    }
+
+    loadMusicTrack(0, false);
+    musicAudio.addEventListener("play", updateMusicButton);
+    musicAudio.addEventListener("pause", updateMusicButton);
+    musicAudio.addEventListener("ended", function () {
+        loadMusicTrack(musicTrackIndex + 1, true);
+    });
+
+    musicToggle.addEventListener("click", function () {
+        if (musicAudio.paused) {
+            musicWasPlaying = true;
+            musicAudio.play().catch(function () {});
+        } else {
+            musicWasPlaying = false;
+            musicAudio.pause();
+        }
+    });
+
+    musicPrevious.addEventListener("click", function () {
+        loadMusicTrack(musicTrackIndex - 1, true);
+        musicWasPlaying = true;
+    });
+
+    musicNext.addEventListener("click", function () {
+        loadMusicTrack(musicTrackIndex + 1, true);
+        musicWasPlaying = true;
+    });
+
+    musicMute.addEventListener("click", function () {
+        musicAudio.muted = !musicAudio.muted;
+        musicMute.textContent = musicAudio.muted ? "🔇" : "🔊";
+        musicMute.setAttribute("aria-pressed", String(musicAudio.muted));
+    });
+
+    musicVolume.addEventListener("input", function () {
+        musicAudio.volume = Number(musicVolume.value);
+        if (musicAudio.volume > 0 && musicAudio.muted) {
+            musicAudio.muted = false;
+            musicMute.textContent = "🔊";
+            musicMute.setAttribute("aria-pressed", "false");
+        }
+    });
 
     const secretButton =
         document.getElementById("secretButton");
@@ -1936,12 +2065,14 @@ body.light .schedule-day {
             secretOverlay.setAttribute("aria-hidden", "true");
             document.body.classList.remove("secret-open");
             resumeBackground();
+            resumeMusic();
         }, 1400);
     }
 
     secretButton.addEventListener("click", function () {
         clearTimeout(secretTimer);
         pauseBackground();
+        pauseMusic();
         document.body.classList.add("secret-open");
         secretOverlay.className = "secret-overlay active darkening";
         randomizeSecretDots();
@@ -1985,13 +2116,21 @@ body.light .schedule-day {
     document.addEventListener("visibilitychange", function () {
         if (document.hidden) {
             pauseBackground();
+            pauseMusic();
         } else {
             resumeBackground();
+            resumeMusic();
         }
     });
 
-    window.addEventListener("blur", pauseBackground);
-    window.addEventListener("focus", resumeBackground);
+    window.addEventListener("blur", function () {
+        pauseBackground();
+        pauseMusic();
+    });
+    window.addEventListener("focus", function () {
+        resumeBackground();
+        resumeMusic();
+    });
 
     themeButton.addEventListener("click", function () {
 
@@ -2024,6 +2163,14 @@ body.light .schedule-day {
     // They remain muted in the cards so autoplay still works.
     document.querySelectorAll(".work-video").forEach(function (video) {
         video.volume = 0.35;
+        video.addEventListener("play", pauseMusic);
+        video.addEventListener("pause", function () {
+            const anotherVideoPlaying = Array.from(document.querySelectorAll(".work-video"))
+                .some(function (otherVideo) { return !otherVideo.paused; });
+            if (!anotherVideoPlaying) {
+                resumeMusic();
+            }
+        });
     });
 
     // Load previews only near the viewport, then play them only while focused.
@@ -2086,6 +2233,7 @@ body.light .schedule-day {
     function openProject(card) {
 
         pauseBackground();
+        pauseMusic();
 
         // The modal becomes the main focus, so stop background previews.
         document.querySelectorAll(".work-video").forEach(function (video) {
@@ -2157,6 +2305,7 @@ body.light .schedule-day {
         modal.classList.remove("open");
         document.body.classList.remove("modal-open");
         resumeBackground();
+        resumeMusic();
 
         // Let visible previews continue after the modal closes.
         if (!document.hidden) {
