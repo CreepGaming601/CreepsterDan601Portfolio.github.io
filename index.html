@@ -382,7 +382,8 @@ body.light .modal-box {
 .music-expand { display: block; position: relative; z-index: 2; }
 .music-options { position: fixed; z-index: 80; top: 82px; right: 24px; display: flex; flex-direction: column; align-items: stretch; gap: 8px; width: min(310px, calc(100vw - 32px)); max-width: 310px; padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: rgba(7, 18, 13, .97); box-shadow: 0 18px 45px rgba(0, 0, 0, .45); opacity: 1; transform: translateY(0) scale(1); transition: opacity .3s ease, transform .3s ease, visibility .3s ease; }
 .music-control.collapsed .music-options { visibility: hidden; opacity: 0; transform: translateY(-12px) scale(.96); pointer-events: none; }
-.music-info { display: flex; flex-direction: column; gap: 3px; padding: 2px 4px; }
+.music-info { display: flex; flex-direction: column; gap: 3px; padding: 2px 4px; cursor: grab; user-select: none; touch-action: none; }
+.music-info:active { cursor: grabbing; }
 .music-label { color: var(--green); font-size: 10px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
 .music-title { color: var(--cream); font-size: 15px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .music-progress { width: 100%; accent-color: var(--green); }
@@ -1929,6 +1930,12 @@ body.light .schedule-day {
     const musicProgress =
         document.getElementById("musicProgress");
 
+    const musicPanel =
+        document.querySelector(".music-options");
+
+    const musicInfo =
+        document.querySelector(".music-info");
+
     // Add or replace filenames here with your own MP3/OGG music files.
     const musicTracks = [
         "BIRDBRAIN 1.mp3",
@@ -1974,7 +1981,8 @@ body.light .schedule-day {
         musicToggle.setAttribute("aria-pressed", String(playing));
     }
 
-    loadMusicTrack(0, false);
+    musicAudio.autoplay = true;
+    loadMusicTrack(0, true);
 
     musicExpand.addEventListener("click", function () {
         musicControl.classList.toggle("collapsed");
@@ -1995,9 +2003,39 @@ body.light .schedule-day {
         });
     }
 
-    // Try immediately, then retry after the visitor's first interaction if needed.
+    // Try immediately, then retry after any interaction if the browser blocks autoplay.
     tryAutostartMusic();
-    document.addEventListener("pointerdown", tryAutostartMusic, { once: true });
+    document.addEventListener("pointerdown", tryAutostartMusic);
+
+    let draggingMusic = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    musicInfo.addEventListener("pointerdown", function (event) {
+        if (musicControl.classList.contains("collapsed")) return;
+        draggingMusic = true;
+        const panelRect = musicPanel.getBoundingClientRect();
+        dragOffsetX = event.clientX - panelRect.left;
+        dragOffsetY = event.clientY - panelRect.top;
+        musicPanel.style.left = panelRect.left + "px";
+        musicPanel.style.top = panelRect.top + "px";
+        musicPanel.style.right = "auto";
+        musicInfo.setPointerCapture(event.pointerId);
+    });
+
+    musicInfo.addEventListener("pointermove", function (event) {
+        if (!draggingMusic) return;
+        musicPanel.style.left = Math.max(8, event.clientX - dragOffsetX) + "px";
+        musicPanel.style.top = Math.max(8, event.clientY - dragOffsetY) + "px";
+    });
+
+    musicInfo.addEventListener("pointerup", function () {
+        draggingMusic = false;
+    });
+
+    musicInfo.addEventListener("pointercancel", function () {
+        draggingMusic = false;
+    });
     musicAudio.addEventListener("play", updateMusicButton);
     musicAudio.addEventListener("pause", updateMusicButton);
     musicAudio.addEventListener("timeupdate", function () {
