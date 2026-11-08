@@ -294,6 +294,9 @@ body.light .modal-box {
     justify-content: space-between;
     align-items: center;
     min-height: 72px;
+    height: 72px;
+    box-sizing: border-box;
+    overflow: visible;
     padding: 12px 30px;
     background: rgba(7, 18, 13, .76);
     backdrop-filter: blur(16px);
@@ -374,12 +377,11 @@ body.light .modal-box {
     color: var(--cream);
 }
 
-.music-control { display: flex; align-items: center; gap: 2px; }
+.music-control { position: relative; display: flex; align-items: center; gap: 2px; height: 40px; }
 .music-control button { padding: 7px 8px; }
-.music-expand { display: none; }
-.music-options { display: flex; align-items: center; gap: 2px; max-width: 360px; opacity: 1; transform: translateX(0); overflow: hidden; transition: max-width .35s ease, opacity .25s ease, transform .35s ease; }
-.music-control.collapsed .music-options { max-width: 0; opacity: 0; transform: translateX(12px); pointer-events: none; }
-.music-control.collapsed .music-expand { display: block; }
+.music-expand { display: block; position: relative; z-index: 2; }
+.music-options { position: absolute; right: 0; top: 50%; display: flex; align-items: center; gap: 2px; max-width: 360px; opacity: 1; transform: translateY(-50%) translateX(0); overflow: hidden; transition: max-width .35s ease, opacity .25s ease, transform .35s ease; }
+.music-control.collapsed .music-options { max-width: 0; opacity: 0; transform: translateY(-50%) translateX(12px); pointer-events: none; }
 .music-control button[aria-pressed="true"] { color: var(--green); }
 .music-volume { width: 72px; accent-color: var(--green); }
 
@@ -1294,7 +1296,7 @@ body.light .schedule-day {
                 <button id="musicPrevious" type="button" aria-label="Previous track">|◀</button>
                 <button id="musicNext" type="button" aria-label="Next track">▶|</button>
                 <button id="musicMute" type="button" aria-label="Mute music" aria-pressed="false">🔊</button>
-                <input class="music-volume" id="musicVolume" type="range" min="0" max="1" step="0.01" value="0.10" aria-label="Music volume">
+                <input class="music-volume" id="musicVolume" type="range" min="0" max="1" step="0.01" value="0.05" aria-label="Music volume">
             </div>
         </div>
 
@@ -1952,6 +1954,8 @@ body.light .schedule-day {
 
     musicExpand.addEventListener("click", function () {
         musicControl.classList.toggle("collapsed");
+        const collapsed = musicControl.classList.contains("collapsed");
+        musicExpand.textContent = collapsed ? "♫" : "×";
         musicExpand.setAttribute("aria-label", musicControl.classList.contains("collapsed")
             ? "Open music controls"
             : "Collapse music controls");
