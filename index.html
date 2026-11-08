@@ -456,6 +456,18 @@ main {
     min-width: 0;
 }
 
+/* Show one portfolio section at a time instead of one long scroll page. */
+main > section {
+    display: none;
+    min-height: calc(100vh - 95px);
+    margin-bottom: 0;
+    padding-bottom: 32px;
+}
+
+main > section.is-current {
+    display: block;
+}
+
 section {
     scroll-margin-top: 95px;
     margin-bottom: 100px;
@@ -2215,40 +2227,39 @@ body.light .schedule-day {
     const sections =
         document.querySelectorAll("main section");
 
-    const observer =
-        new IntersectionObserver(
-            function (entries) {
+    function showSection(sectionId, updateHash) {
+        const targetSection = document.getElementById(sectionId);
+        if (!targetSection) return;
 
-                entries.forEach(function (entry) {
+        sections.forEach(function (section) {
+            section.classList.toggle("is-current", section === targetSection);
+        });
 
-                    if (!entry.isIntersecting) {
-                        return;
-                    }
+        navLinks.forEach(function (link) {
+            link.classList.toggle(
+                "active",
+                link.getAttribute("href") === "#" + sectionId
+            );
+        });
 
-                    navLinks.forEach(function (link) {
+        if (updateHash) {
+            history.replaceState(null, "", "#" + sectionId);
+        }
 
-                        const target =
-                            link.getAttribute("href");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-                        link.classList.toggle(
-                            "active",
-                            target === "#" + entry.target.id
-                        );
+    document.querySelectorAll("a[href^='#']").forEach(function (link) {
+        const targetId = link.getAttribute("href").slice(1);
+        if (!document.getElementById(targetId)) return;
 
-                    });
-
-                });
-
-            },
-            {
-                rootMargin:
-                    "-25% 0px -65% 0px"
-            }
-        );
-
-    sections.forEach(function (section) {
-        observer.observe(section);
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+            showSection(targetId, true);
+        });
     });
+
+    showSection(window.location.hash.slice(1) || "home", false);
 
 })();
 </script>
