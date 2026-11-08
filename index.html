@@ -799,9 +799,9 @@ section {
 .schedule-wrapper { width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; border-radius: 16px; -webkit-overflow-scrolling: touch; }
 .schedule-board { display: grid; width: 100%; min-width: 680px; grid-template-columns: 90px repeat(7, minmax(70px, 1fr)); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
 .schedule-corner, .schedule-day { padding: 12px 8px; background: var(--surface-light); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: #ffffff; font-size: 12px; font-weight: 900; text-align: center; }
-.schedule-times { display: grid; grid-template-rows: repeat(15, 56px); padding-top: 8px; color: var(--muted); font-size: 10px; text-align: right; }
+.schedule-times { display: grid; grid-template-rows: repeat(29, 56px); padding-top: 8px; color: var(--muted); font-size: 10px; text-align: right; }
 .schedule-times span { padding-right: 8px; }
-.schedule-slots { grid-column: 2 / -1; display: grid; grid-template-columns: repeat(7, minmax(70px, 1fr)); grid-template-rows: repeat(15, 56px); background: repeating-linear-gradient(to bottom, transparent 0, transparent 55px, var(--line) 55px, var(--line) 56px); }
+.schedule-slots { grid-column: 2 / -1; display: grid; grid-template-columns: repeat(7, minmax(70px, 1fr)); grid-template-rows: repeat(56, 28px); background: repeating-linear-gradient(to bottom, transparent 0, transparent 27px, var(--line) 27px, var(--line) 28px); }
 .schedule-event { margin: 4px; padding: 6px; overflow: hidden; border-radius: 8px; background: var(--green); color: #10291c; font-size: 11px; font-weight: 900; }
 .schedule-note { margin-top: 14px; color: var(--muted); font-size: 13px; }
 
@@ -1188,7 +1188,7 @@ body.light .schedule-day {
     }
 
     .schedule-times {
-        grid-template-rows: repeat(15, 40px);
+        grid-template-rows: repeat(29, 32px);
         padding-top: 5px;
         font-size: 8px;
     }
@@ -1200,9 +1200,9 @@ body.light .schedule-day {
 
     .schedule-slots {
         grid-template-columns: repeat(7, minmax(0, 1fr));
-        grid-template-rows: repeat(15, 40px);
+        grid-template-rows: repeat(56, 16px);
         min-width: 0;
-        background: repeating-linear-gradient(to bottom, transparent 0, transparent 39px, var(--line) 39px, var(--line) 40px);
+        background: repeating-linear-gradient(to bottom, transparent 0, transparent 15px, var(--line) 15px, var(--line) 16px);
     }
 
     .schedule-event {
@@ -1636,31 +1636,31 @@ body.light .schedule-day {
                 </div>
 
                 <div class="schedule-slots">
-                    <div class="schedule-event" style="grid-column: 2; grid-row: 7 / 9;">
+                    <div class="schedule-event" style="grid-column: 2; grid-row: 25 / 35;">
                         MA103
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 4; grid-row: 1 / 4;">
+                    <div class="schedule-event" style="grid-column: 4; grid-row: 3 / 13;">
                         GEO02
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 4; grid-row: 7 / 9;">
+                    <div class="schedule-event" style="grid-column: 4; grid-row: 25 / 35;">
                         IR001
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 2; grid-row: 9 / 11;">
+                    <div class="schedule-event" style="grid-column: 2; grid-row: 36 / 46;">
                         MA102
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 4; grid-row: 9 / 11;">
+                    <div class="schedule-event" style="grid-column: 4; grid-row: 36 / 46;">
                         NTP001
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 5; grid-row: 9 / 11;">
+                    <div class="schedule-event" style="grid-column: 5; grid-row: 36 / 44;">
                         PATHFIT001
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 6; grid-row: 9 / 11;">
+                    <div class="schedule-event" style="grid-column: 6; grid-row: 36 / 46;">
                         GEO09
                     </div>
                 </div>
