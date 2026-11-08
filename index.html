@@ -1939,6 +1939,7 @@ body.light .schedule-day {
     // Add or replace filenames here with your own MP3/OGG music files.
     const musicTracks = [
         "BIRDBRAIN 1.mp3",
+        "Overtime.mp3,
         "Big and Bad 1.mp3",
         "A Humans Touch 1.mp3"
     ];
@@ -2178,12 +2179,14 @@ body.light .schedule-day {
             secretOverlay.setAttribute("aria-hidden", "true");
             document.body.classList.remove("secret-open");
             resumeBackground();
+            resumeMusic();
         }, 1400);
     }
 
     secretButton.addEventListener("click", function () {
         clearTimeout(secretTimer);
         pauseBackground();
+        pauseMusic();
         document.body.classList.add("secret-open");
         secretOverlay.className = "secret-overlay active darkening";
         randomizeSecretDots();
@@ -2501,6 +2504,10 @@ body.light .schedule-day {
             if (updateHash) {
                 history.replaceState(null, "", "#" + sectionId);
             }
+
+        if (sectionId === "home") {
+            tryAutostartMusic();
+        }
 
             window.scrollTo({ top: 0, behavior: "auto" });
             requestAnimationFrame(function () {
