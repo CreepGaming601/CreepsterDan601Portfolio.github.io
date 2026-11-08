@@ -800,7 +800,7 @@ section {
 .schedule-board { display: grid; width: 100%; min-width: 680px; grid-template-columns: 90px repeat(7, minmax(70px, 1fr)); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
 .schedule-corner, .schedule-day { display: flex; align-items: center; justify-content: center; padding: 12px 8px; background: var(--surface-light); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: #ffffff; font-size: 13px; font-weight: 900; text-align: center; }
 .schedule-times { display: grid; grid-template-rows: repeat(29, 56px); padding-top: 0; color: var(--muted); font-size: 13px; text-align: center; }
-.schedule-times span { display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+.schedule-times span { display: flex; align-items: flex-start; justify-content: center; padding: 0 4px; line-height: 1.2; }
 .schedule-slots { grid-column: 2 / -1; display: grid; grid-template-columns: repeat(7, minmax(70px, 1fr)); grid-template-rows: repeat(56, 28px); background: repeating-linear-gradient(to bottom, transparent 0, transparent 27px, var(--line) 27px, var(--line) 28px); }
 .schedule-event { display: grid !important; place-items: center; text-align: center !important; margin: 4px; padding: 6px; overflow: hidden; border-radius: 8px; background: var(--green); color: #10291c; font-size: clamp(13px, 1.1vw, 17px); font-weight: 900; line-height: 1.2; }
 .schedule-note { margin-top: 14px; color: var(--muted); font-size: 13px; }
