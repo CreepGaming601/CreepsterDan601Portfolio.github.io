@@ -454,6 +454,12 @@ h1, h2, h3, p, a, button, span, li, code { color: inherit; }
 
 main {
     min-width: 0;
+    transition: opacity .24s ease, transform .24s ease;
+}
+
+main.section-switching {
+    opacity: 0;
+    transform: translateY(10px);
 }
 
 /* Show one portfolio section at a time instead of one long scroll page. */
@@ -1309,7 +1315,7 @@ body.light .schedule-day {
             </a>
 
             <a href="#contact">
-                <span>06</span> Contacts
+                <span>06</span> Socials
             </a>
 
         </nav>
@@ -2231,22 +2237,36 @@ body.light .schedule-day {
         const targetSection = document.getElementById(sectionId);
         if (!targetSection) return;
 
-        sections.forEach(function (section) {
-            section.classList.toggle("is-current", section === targetSection);
-        });
+        const mainElement = document.querySelector("main");
+        const switchSection = function () {
+            sections.forEach(function (section) {
+                section.classList.toggle("is-current", section === targetSection);
+            });
 
-        navLinks.forEach(function (link) {
-            link.classList.toggle(
-                "active",
-                link.getAttribute("href") === "#" + sectionId
-            );
-        });
+            navLinks.forEach(function (link) {
+                link.classList.toggle(
+                    "active",
+                    link.getAttribute("href") === "#" + sectionId
+                );
+            });
 
-        if (updateHash) {
-            history.replaceState(null, "", "#" + sectionId);
+            if (updateHash) {
+                history.replaceState(null, "", "#" + sectionId);
+            }
+
+            window.scrollTo({ top: 0, behavior: "auto" });
+            requestAnimationFrame(function () {
+                mainElement.classList.remove("section-switching");
+            });
+        };
+
+        if (!document.querySelector("main > section.is-current")) {
+            switchSection();
+            return;
         }
 
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        mainElement.classList.add("section-switching");
+        window.setTimeout(switchSection, 240);
     }
 
     document.querySelectorAll("a[href^='#']").forEach(function (link) {
