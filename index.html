@@ -376,6 +376,10 @@ body.light .modal-box {
 
 .music-control { display: flex; align-items: center; gap: 2px; }
 .music-control button { padding: 7px 8px; }
+.music-expand { display: none; }
+.music-options { display: flex; align-items: center; gap: 2px; max-width: 360px; opacity: 1; transform: translateX(0); overflow: hidden; transition: max-width .35s ease, opacity .25s ease, transform .35s ease; }
+.music-control.collapsed .music-options { max-width: 0; opacity: 0; transform: translateX(12px); pointer-events: none; }
+.music-control.collapsed .music-expand { display: block; }
 .music-control button[aria-pressed="true"] { color: var(--green); }
 .music-volume { width: 72px; accent-color: var(--green); }
 
@@ -1283,12 +1287,15 @@ body.light .schedule-day {
 
     <nav class="top-links" aria-label="Top navigation">
 
-        <div class="music-control" aria-label="Background music controls">
-            <button id="musicToggle" type="button" aria-label="Play music" aria-pressed="false">▶</button>
-            <button id="musicPrevious" type="button" aria-label="Previous track">|◀</button>
-            <button id="musicNext" type="button" aria-label="Next track">▶|</button>
-            <button id="musicMute" type="button" aria-label="Mute music" aria-pressed="false">🔊</button>
-            <input class="music-volume" id="musicVolume" type="range" min="0" max="1" step="0.01" value="0.25" aria-label="Music volume">
+        <div class="music-control collapsed" id="musicControl" aria-label="Background music controls">
+            <button class="music-expand" id="musicExpand" type="button" aria-label="Open music controls">♫</button>
+            <div class="music-options">
+                <button id="musicToggle" type="button" aria-label="Play music" aria-pressed="false">▶</button>
+                <button id="musicPrevious" type="button" aria-label="Previous track">|◀</button>
+                <button id="musicNext" type="button" aria-label="Next track">▶|</button>
+                <button id="musicMute" type="button" aria-label="Mute music" aria-pressed="false">🔊</button>
+                <input class="music-volume" id="musicVolume" type="range" min="0" max="1" step="0.01" value="0.10" aria-label="Music volume">
+            </div>
         </div>
 
         <button class="theme-button" id="themeButton" type="button">
@@ -1879,6 +1886,12 @@ body.light .schedule-day {
     const musicAudio =
         document.getElementById("backgroundMusic");
 
+    const musicControl =
+        document.getElementById("musicControl");
+
+    const musicExpand =
+        document.getElementById("musicExpand");
+
     const musicToggle =
         document.getElementById("musicToggle");
 
@@ -1903,10 +1916,12 @@ body.light .schedule-day {
 
     let musicTrackIndex = 0;
     let musicWasPlaying = false;
+    let musicStarted = false;
 
     function loadMusicTrack(index, autoplay) {
         musicTrackIndex = (index + musicTracks.length) % musicTracks.length;
         musicAudio.src = musicTracks[musicTrackIndex];
+        musicAudio.loop = false;
         musicAudio.volume = Number(musicVolume.value);
         if (autoplay) {
             musicAudio.play().catch(function () {});
@@ -1934,6 +1949,27 @@ body.light .schedule-day {
     }
 
     loadMusicTrack(0, false);
+
+    musicExpand.addEventListener("click", function () {
+        musicControl.classList.toggle("collapsed");
+        musicExpand.setAttribute("aria-label", musicControl.classList.contains("collapsed")
+            ? "Open music controls"
+            : "Collapse music controls");
+    });
+
+    function tryAutostartMusic() {
+        if (musicStarted || document.hidden || document.body.classList.contains("modal-open")) return;
+        musicStarted = true;
+        musicWasPlaying = true;
+        musicAudio.play().catch(function () {
+            // Browsers may require the first user interaction before allowing audio.
+            musicStarted = false;
+        });
+    }
+
+    // Try immediately, then retry after the visitor's first interaction if needed.
+    tryAutostartMusic();
+    document.addEventListener("pointerdown", tryAutostartMusic, { once: true });
     musicAudio.addEventListener("play", updateMusicButton);
     musicAudio.addEventListener("pause", updateMusicButton);
     musicAudio.addEventListener("ended", function () {
@@ -2065,14 +2101,12 @@ body.light .schedule-day {
             secretOverlay.setAttribute("aria-hidden", "true");
             document.body.classList.remove("secret-open");
             resumeBackground();
-            resumeMusic();
         }, 1400);
     }
 
     secretButton.addEventListener("click", function () {
         clearTimeout(secretTimer);
         pauseBackground();
-        pauseMusic();
         document.body.classList.add("secret-open");
         secretOverlay.className = "secret-overlay active darkening";
         randomizeSecretDots();
@@ -2116,20 +2150,16 @@ body.light .schedule-day {
     document.addEventListener("visibilitychange", function () {
         if (document.hidden) {
             pauseBackground();
-            pauseMusic();
         } else {
             resumeBackground();
-            resumeMusic();
         }
     });
 
     window.addEventListener("blur", function () {
         pauseBackground();
-        pauseMusic();
     });
     window.addEventListener("focus", function () {
         resumeBackground();
-        resumeMusic();
     });
 
     themeButton.addEventListener("click", function () {
@@ -2163,14 +2193,6 @@ body.light .schedule-day {
     // They remain muted in the cards so autoplay still works.
     document.querySelectorAll(".work-video").forEach(function (video) {
         video.volume = 0.35;
-        video.addEventListener("play", pauseMusic);
-        video.addEventListener("pause", function () {
-            const anotherVideoPlaying = Array.from(document.querySelectorAll(".work-video"))
-                .some(function (otherVideo) { return !otherVideo.paused; });
-            if (!anotherVideoPlaying) {
-                resumeMusic();
-            }
-        });
     });
 
     // Load previews only near the viewport, then play them only while focused.
