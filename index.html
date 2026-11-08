@@ -1189,9 +1189,9 @@ body.light .schedule-day {
     }
 
     .schedule-times {
-        grid-template-rows: repeat(29, 32px);
+        grid-template-rows: repeat(29, 20px);
         padding-top: 0;
-        font-size: 11px !important;
+        font-size: clamp(7px, 1.8vw, 10px) !important;
     }
 
     .schedule-times span {
@@ -1201,21 +1201,21 @@ body.light .schedule-day {
 
     .schedule-slots {
         grid-template-columns: repeat(7, minmax(0, 1fr));
-        grid-template-rows: repeat(56, 16px);
+        grid-template-rows: repeat(56, 10px);
         min-width: 0;
-        background: repeating-linear-gradient(to bottom, transparent 0, transparent 15px, var(--line) 15px, var(--line) 16px);
+        background: repeating-linear-gradient(to bottom, transparent 0, transparent 9px, var(--line) 9px, var(--line) 10px);
     }
 
     .schedule-event {
-        margin: 2px;
-        padding: 4px 2px;
+        margin: 1px;
+        padding: 2px 1px;
         border-radius: 5px;
-        font-size: clamp(8px, 2.4vw, 12px);
-        line-height: 1.15;
+        font-size: clamp(7px, 1.8vw, 10px);
+        line-height: 1.05;
     }
 
     .daily-practice {
-        font-size: clamp(10px, 3vw, 14px);
+        font-size: clamp(8px, 2.2vw, 11px);
     }
 }
 </style>
