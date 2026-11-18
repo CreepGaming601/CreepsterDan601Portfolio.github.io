@@ -1629,6 +1629,14 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .camera-button.active { background:#aaa; border-style:inset; box-shadow:inset 2px 2px #777, inset -2px -2px #eee; }
 .camera-button:focus-visible { outline:3px solid #ed1010; outline-offset:2px; }
 </style>
+<style>
+.music-title { display:block; transition:opacity .2s ease, transform .2s ease; }
+.music-title-changing { animation:musicTitleChange .45s ease both; }
+@keyframes musicTitleChange {
+    0% { opacity:0; transform:translateY(4px); }
+    100% { opacity:1; transform:translateY(0); }
+}
+</style>
 </head>
 
 <body>
@@ -2442,18 +2450,46 @@ const portfolioSettings = {
     let musicTrackIndex = 0;
     let musicWasPlaying = false;
     let musicStarted = false;
+    let musicFadeToken = 0;
 
-    function loadMusicTrack(index, autoplay) {
+    function fadeMusicVolume(target, duration, token) {
+        return new Promise(function (resolve) {
+            const start = musicAudio.volume;
+            const startedAt = performance.now();
+            function step(now) {
+                if (token !== musicFadeToken) return resolve(false);
+                const progress = Math.min(1, (now - startedAt) / duration);
+                musicAudio.volume = start + (target - start) * progress;
+                if (progress < 1) requestAnimationFrame(step);
+                else resolve(true);
+            }
+            requestAnimationFrame(step);
+        });
+    }
+
+    async function loadMusicTrack(index, autoplay) {
+        const token = ++musicFadeToken;
+        const targetVolume = Number(musicVolume.value);
+        const wasPlaying = !musicAudio.paused;
+        if (wasPlaying) {
+            await fadeMusicVolume(0, 260, token);
+            if (token !== musicFadeToken) return;
+        }
         musicTrackIndex = (index + musicTracks.length) % musicTracks.length;
         musicAudio.src = musicTracks[musicTrackIndex];
         musicAudio.loop = false;
-        musicAudio.volume = Number(musicVolume.value);
+        musicAudio.volume = wasPlaying ? 0 : targetVolume;
         musicTitle.textContent = musicTracks[musicTrackIndex]
             .replace(/\.[^/.]+$/, "")
             .replace(/\s*1$/, "");
+        musicTitle.classList.remove("music-title-changing");
+        void musicTitle.offsetWidth;
+        musicTitle.classList.add("music-title-changing");
         musicProgress.value = "0";
         if (autoplay) {
-            musicAudio.play().catch(function () {});
+            musicAudio.play().then(function () {
+                if (wasPlaying) fadeMusicVolume(targetVolume, 420, token);
+            }).catch(function () {});
         }
     }
 
