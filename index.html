@@ -1270,6 +1270,62 @@ body.light .schedule-day {
     }
 }
 </style>
+
+<style>
+/* Security-camera presentation layer: the content remains ordinary editable HTML. */
+:root {
+    --bg: #17191b;
+    --surface: #c7c7c7;
+    --surface-light: #e9e9e9;
+    --line: #777;
+    --green: #111;
+    --green-light: #222;
+    --cream: #111;
+    --muted: #333;
+    --red: #e51616;
+    --monitor: #080909;
+}
+body { background:#111; color:#111; font-family:Arial, Helvetica, sans-serif; }
+.background { opacity:.24; filter:grayscale(1) contrast(1.15); }
+.background::after { content:""; position:absolute; inset:0; background:rgba(0,0,0,.62); }
+.topbar { height:72px; padding:8px 14px; background:#bdbdbd; border-bottom:3px solid #555; color:#111; box-shadow:inset 0 -2px #eee; }
+.brand-mark { background:#ddd; color:#111; border:2px solid #333; border-radius:2px; }
+.brand-name,.brand-subtitle { color:#111; }
+.theme-button,.music-expand { color:#111; border-color:#555; background:#d0d0d0; }
+.layout { max-width:1320px; grid-template-columns:320px minmax(0,1fr); gap:10px; padding:14px; }
+.sidebar { position:sticky; top:14px; align-self:start; padding:10px; background:#bdbdbd; border:3px solid #555; border-radius:2px; box-shadow:inset 0 0 0 2px #eee; }
+.profile-mini { padding:10px; background:#d7d7d7; border:2px solid #777; border-radius:0; }
+.avatar { border-radius:0; border:2px solid #333; }
+.profile-mini h2,.profile-mini p { color:#111; }
+.side-nav { margin-top:10px; padding:5px; background:#cfcfcf; border:2px solid #777; border-radius:0; }
+.side-nav a { color:#111; border-radius:0; border:1px solid transparent; }
+.side-nav a:hover,.side-nav a.active { background:#aaa; border-color:#555; color:#111; }
+.side-nav a span { color:#333; }
+main > section { background:#25282b; border:2px solid #666; box-shadow:inset 0 0 0 2px #ddd, 0 8px 0 #090909; padding:18px; position:relative; overflow:hidden; }
+main > section::before { content:""; position:absolute; inset:0; pointer-events:none; opacity:.2; background:repeating-linear-gradient(0deg,transparent 0 3px,#fff 4px 5px); }
+main > section > * { position:relative; z-index:1; }
+.section-heading { background:#c8c8c8; border:2px solid #666; padding:8px 12px; margin:-2px -2px 16px; }
+.section-heading h2,.section-heading p,.eyebrow { color:#111; }
+.camera-console { display:grid; grid-template-columns:150px 1fr; gap:10px; margin-bottom:12px; }
+.camera-map,.monitor-status { background:#c7c7c7; border:2px solid #666; padding:8px; }
+.camera-map h3 { margin:0 0 7px; font-size:12px; text-transform:uppercase; }
+.camera-buttons { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
+.camera-button { min-height:32px; border:2px outset #eee; background:#d4d4d4; color:#111; font-weight:700; font-size:11px; cursor:pointer; }
+.camera-button.active,.camera-button:hover { background:#aaa; border-style:inset; }
+.monitor-status { min-height:62px; background:#111; color:#eee; display:flex; align-items:center; justify-content:space-between; font-size:12px; padding:12px; }
+.monitor-status strong { color:#f22; letter-spacing:.08em; }
+.work-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.work-card { background:#161819; border:2px solid #888; border-radius:0; box-shadow:inset 0 0 0 2px #050505; }
+.work-card::before { content:"REC"; position:absolute; top:8px; right:9px; z-index:2; color:#f22; font:700 10px monospace; }
+.work-card:hover,.work-card.camera-selected { transform:none; border-color:#fff; outline:3px solid #e51616; }
+.work-image,.work-video { background:#000; filter:grayscale(.15) contrast(1.08); }
+.work-info { background:#bdbdbd; border-top:2px solid #555; padding:12px; }
+.work-info h3,.work-info p,.work-tag { color:#111; }
+.work-tag { background:#ddd; border:1px solid #777; border-radius:0; }
+.music-options { background:#c7c7c7; border:2px solid #555; border-radius:0; color:#111; }
+.music-options * { color:#111; }
+@media (max-width:760px) { .layout{grid-template-columns:1fr;padding:8px}.sidebar{position:relative}.camera-console{grid-template-columns:1fr}.work-grid{grid-template-columns:1fr}.topbar{height:auto;min-height:64px} }
+</style>
 </head>
 
 <body>
@@ -1311,7 +1367,6 @@ body.light .schedule-day {
                     <button id="musicMute" type="button" aria-label="Mute music" aria-pressed="false">🔊</button>
                     <input class="music-volume" id="musicVolume" type="range" min="0" max="1" step="0.01" value="0.05" aria-label="Music volume">
                 </div>
-                <input class="music-volume" id="musicVolume" type="range" min="0" max="1" step="0.01" value="0.05" aria-label="Music volume">
             </div>
         </div>
 
@@ -1529,6 +1584,17 @@ body.light .schedule-day {
                 </div>
 
                 <p>Click on one for more details!</p>
+            </div>
+
+            <div class="camera-console" aria-label="Project camera controls">
+                <div class="camera-map">
+                    <h3>Showroom cameras</h3>
+                    <div class="camera-buttons" id="cameraButtons"></div>
+                </div>
+                <div class="monitor-status">
+                    <span><strong>● REC</strong> &nbsp; PROJECT MONITOR</span>
+                    <span id="cameraReadout">CAM 1 · READY</span>
+                </div>
             </div>
 
             <div class="work-grid">
@@ -1863,8 +1929,38 @@ body.light .schedule-day {
 
 <script>
 
+/* EDITABLE PORTFOLIO SETTINGS
+   Change these labels without touching the layout. Add more camera names if you add more work cards. */
+const portfolioSettings = {
+    showroomLabel: "PROJECT MONITOR",
+    cameraPrefix: "CAM",
+    cameraNames: ["CAM 1", "CAM 2", "CAM 3", "CAM 4", "CAM 5", "CAM 6", "CAM 7", "CAM 8"]
+};
+
 (function () {
     "use strict";
+
+    const cameraButtons = document.getElementById("cameraButtons");
+    const cameraReadout = document.getElementById("cameraReadout");
+    const workCards = Array.from(document.querySelectorAll(".work-card"));
+    if (cameraButtons && workCards.length) {
+        workCards.forEach(function (card, index) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "camera-button";
+            button.textContent = portfolioSettings.cameraNames[index] || `${portfolioSettings.cameraPrefix} ${index + 1}`;
+            button.addEventListener("click", function () {
+                workCards.forEach(function (item) { item.classList.remove("camera-selected"); });
+                document.querySelectorAll(".camera-button").forEach(function (item) { item.classList.remove("active"); });
+                card.classList.add("camera-selected");
+                button.classList.add("active");
+                cameraReadout.textContent = button.textContent + " · " + (card.querySelector("h3")?.textContent || "PROJECT");
+                card.scrollIntoView({ behavior: "smooth", block: "center" });
+            });
+            cameraButtons.appendChild(button);
+        });
+        cameraButtons.querySelector(".camera-button")?.click();
+    }
 
     const accordionButtons =
         document.querySelectorAll(".accordion button");
