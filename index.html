@@ -1329,6 +1329,9 @@ main > section { height:100%; min-height:0; overflow:hidden; }
 .camera-feed video,.camera-feed img { height:100%; }
 .work-card { min-height:0; display:grid; grid-template-rows:minmax(0,1fr) auto; }
 .work-card .work-image,.work-card .work-video { min-height:0; height:100%; aspect-ratio:auto; }
+.work-card .work-image,
+.work-card .work-video,
+.camera-feed video { object-fit:contain; object-position:center; background:#000; }
 .work-info { min-height:0; padding:6px 10px; overflow:hidden; }
 .work-info h3 { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:15px; }
 .work-info p,.work-info .work-tag,.work-info .work-description { display:none; }
