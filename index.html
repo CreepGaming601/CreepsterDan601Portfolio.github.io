@@ -1334,6 +1334,23 @@ main > section { height:100%; min-height:0; overflow:hidden; }
 .work-info p,.work-info .work-tag,.work-info .work-description { display:none; }
 @media (max-width:760px) { html,body{overflow:auto;height:auto}.layout,main,main>section{height:auto;min-height:0;overflow:visible}#works{height:auto;padding:12px 8px 50px}#works .camera-console{height:620px;margin:0 -8px}.work-grid{height:430px;overflow:auto;grid-template-rows:180px repeat(3,150px);padding:46px 8px 8px}.camera-feed{height:180px}.work-card .work-info{padding:5px}.work-info h3{font-size:11px}.work-info p,.work-info .work-tag{display:block;font-size:9px}.work-info .work-description{display:none} }
 </style>
+
+<style>
+/* The console stays fixed; only long-form Blogs and Schedule content scroll. */
+main > section:not(#study):not(#blogs) { overflow:hidden; }
+main > section#study,
+main > section#blogs { overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#555 #c6c6c6; }
+main > section#study::-webkit-scrollbar,
+main > section#blogs::-webkit-scrollbar { width:12px; }
+main > section#study::-webkit-scrollbar-track,
+main > section#blogs::-webkit-scrollbar-track { background:#c6c6c6; }
+main > section#study::-webkit-scrollbar-thumb,
+main > section#blogs::-webkit-scrollbar-thumb { background:#555; border:2px solid #c6c6c6; }
+@media (max-width:760px) {
+    main > section#study,
+    main > section#blogs { max-height:calc(100vh - 48px); overflow-y:auto; }
+}
+</style>
 </head>
 
 <body>
