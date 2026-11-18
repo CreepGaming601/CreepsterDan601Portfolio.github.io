@@ -1721,23 +1721,21 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .camera-feed-image-hidden { display:none !important; }
 .work-grid .work-card.category-hidden { display:none !important; }
 .work-grid.render-mode {
-    display:block;
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
     height:auto;
     min-height:100%;
     overflow-y:auto !important;
     padding:28px 45px 35px;
-    column-count:3;
-    column-gap:14px;
-    column-fill:balance;
+    gap:14px;
 }
 .work-grid.render-mode .feed-heading,
 .work-grid.render-mode .camera-feed { display:none !important; }
 .work-grid.render-mode .work-card {
-    display:inline-block;
-    vertical-align:top;
+    display:block;
     width:100%;
-    margin:0 0 14px;
-    break-inside:avoid;
+    margin:0;
     height:auto;
     min-height:0;
     max-height:none;
@@ -1770,14 +1768,7 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .work-grid.render-mode .work-card .work-info .work-tag { color:#fff; }
 .work-grid.render-mode .work-card .work-info h3 { white-space:normal; overflow:visible; font-size:13px; }
 .work-grid.render-mode .work-card .work-info::after { display:none; }
-.work-grid.render-mode .work-card:nth-of-type(7) { transform:rotate(-.35deg); }
-.work-grid.render-mode .work-card:nth-of-type(8) { transform:translateY(10px) rotate(.25deg); }
-.work-grid.render-mode .work-card:nth-of-type(9) { transform:rotate(-.2deg); }
-.work-grid.render-mode .work-card:nth-of-type(10) { transform:translateY(-5px) rotate(.3deg); }
-.work-grid.render-mode .work-card:nth-of-type(11) { transform:translateY(7px) rotate(-.3deg); }
-.work-grid.render-mode .work-card:nth-of-type(12) { transform:rotate(.2deg); }
-@media (max-width:900px) { .work-grid.render-mode { column-count:2; } }
-@media (max-width:760px) { .work-grid.render-mode { column-count:1; padding:22px 8px 35px; } }
+@media (max-width:760px) { .work-grid.render-mode { padding:22px 8px 35px; } }
 @media (max-width:760px) {
     .camera-buttons { padding:8px 0; }
     .archive-group summary { font-size:12px; padding:9px 10px; }
@@ -2196,7 +2187,7 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
                     </div>
                 </article>
               
-                <article class="work-card" tabindex="0" data-category="render" data-title="Hu Tao Pose" data-media-type="image" data-media="hutaopose.png" data-description="A Hu Tao drawing recreated into 3D!">
+                <article class="work-card" tabindex="0" data-category="render" data-title="Hu Tao" data-media-type="image" data-media="hutaopose.png" data-description="A Hu Tao drawing recreated into 3D!">
                     <img class="work-image" src="hutaopose.png" alt="Hu Tao pose render">
                     <div class="work-info"><h3>Hu Tao</h3><p>3D Render</p><span class="work-tag">Character Render</span></div>
                 </article>
@@ -2206,22 +2197,22 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
                     <div class="work-info"><h3>Wile E. Coyote</h3><p>3D Render</p><span class="work-tag">Character Render</span></div>
                 </article>
 
-                <article class="work-card" tabindex="0" data-category="render" data-title="Lohen Study" data-media-type="image" data-media="itriedlohen.png" data-description="An AI image turned into a human made 3D render!">
+                <article class="work-card" tabindex="0" data-category="render" data-title="Lohen" data-media-type="image" data-media="itriedlohen.png" data-description="An AI image turned into a human made 3D render!">
                     <img class="work-image" src="itriedlohen.png" alt="Lohen render">
                     <div class="work-info"><h3>Lohen</h3><p>3D Render</p><span class="work-tag">Character Render</span></div>
                 </article>
 
-                <article class="work-card" tabindex="0" data-category="render" data-title="Silver Wolf Render II" data-media-type="image" data-media="ILOVESILVERWOLF2.png" data-description="'A mission? piece of cake!'">
+                <article class="work-card" tabindex="0" data-category="render" data-title="Silverwolf" data-media-type="image" data-media="ILOVESILVERWOLF2.png" data-description="'A mission? piece of cake!'">
                     <img class="work-image" src="ILOVESILVERWOLF2.png" alt="Silver Wolf render two">
                     <div class="work-info"><h3>SilverWolf</h3><p>3D Render</p><span class="work-tag">Character Render</span></div>
                 </article>
 
-                <article class="work-card" tabindex="0" data-category="render" data-title="Silver Wolf Render" data-media-type="image" data-media="ILOVESILVERWOLF.png" data-description="'Enable autoplay, and watch a true master at work!'">
+                <article class="work-card" tabindex="0" data-category="render" data-title="Silverwolf Lv.999" data-media-type="image" data-media="ILOVESILVERWOLF.png" data-description="'Enable autoplay, and watch a true master at work!'">
                     <img class="work-image" src="ILOVESILVERWOLF.png" alt="Silver Wolf render">
                     <div class="work-info"><h3>Silverwolf Lv.999</h3><p>3D Render</p><span class="work-tag">Character Render</span></div>
                 </article>
 
-                <article class="work-card" tabindex="0" data-category="render" data-title="King K. Rool Render" data-media-type="image" data-media="newkrool.png" data-description="A conniving reptile who's alot more bite than he looks...">
+                <article class="work-card" tabindex="0" data-category="render" data-title="King K. Rool" data-media-type="image" data-media="newkrool.png" data-description="A conniving reptile who's alot more bite than he looks...">
                     <img class="work-image" src="newkrool.png" alt="King K. Rool render">
                     <div class="work-info"><h3>King K. Rool Render</h3><p>3D Render</p><span class="work-tag">Character Render</span></div>
                 </article>
