@@ -1358,20 +1358,24 @@ main > section::before { opacity:.12; }
 #works { padding:0 24px 70px; }
 #works .camera-console { margin:0 -24px 16px; }
 .camera-console { grid-template-columns:335px 1fr; min-height:calc(100vh - 110px); gap:0; }
-.camera-map { border:0; border-right:2px solid #555; border-radius:0; padding:16px; background:#bdbdbd; }
+.camera-console { display:block; position:relative; min-height:calc(100vh - 110px); background:#050606; }
+.camera-map { position:absolute; inset:0 auto 0 0; width:335px; border:0; border-right:2px solid #555; border-radius:0; padding:16px; background:#bdbdbd; }
 .camera-map h3 { padding:7px; margin:-16px -16px 14px; background:#d2d2d2; border-bottom:2px solid #777; font-size:13px; }
 .camera-buttons { grid-template-columns:repeat(2,1fr); gap:8px; padding:25px 5px; }
 .camera-button { min-height:42px; font-size:13px; }
-.monitor-status { position:relative; min-height:0; border:0; background:#050606; padding:26px; align-items:flex-start; }
+.monitor-status { position:absolute; inset:0 0 0 335px; min-height:0; border:0; background:#050606; padding:26px; align-items:flex-start; }
 .monitor-status::before,.monitor-status::after { content:""; position:absolute; width:78px; height:78px; border-color:#eee; border-style:solid; }
 .monitor-status::before { top:24px; left:22px; border-width:4px 0 0 4px; }.monitor-status::after { top:24px; right:22px; border-width:4px 4px 0 0; }
 .monitor-status span:last-child { margin-left:auto; margin-top:3px; }
-.work-grid { position:relative; z-index:2; padding:18px 45px 35px; grid-template-columns:repeat(2,minmax(0,1fr)); }
+.work-grid { position:absolute; z-index:3; top:0; right:0; bottom:0; width:calc(100% - 335px); overflow:auto; padding:75px 45px 35px; grid-template-columns:repeat(2,minmax(0,1fr)); background:#050606; }
+.work-grid::before { content:"LIVE PROJECT FEED"; position:absolute; top:18px; left:45px; color:#eee; font:700 12px monospace; letter-spacing:.1em; }
+.work-card.is-camera-active { outline:3px solid #ed1010; outline-offset:-3px; }
+.work-card .work-description { display:block; margin-top:8px; color:#222; font-size:12px; line-height:1.35; }
 .work-card { background:#111; border-color:#999; }
 .work-card .work-info { background:#bbb; }
 .console-diagnostics { position:fixed; z-index:70; bottom:0; left:0; right:0; height:38px; display:flex; justify-content:space-between; align-items:center; padding:4px 8px; background:#c6c6c6; border-top:2px solid #555; box-shadow:inset 0 1px #fff; color:#222; font-size:13px; }
 .diagnostic-group { display:flex; align-items:center; gap:7px; }.power-meter,.temperature-meter { display:flex; gap:2px; padding:2px; min-width:170px; height:14px; border:2px inset #eee; background:#eee; }.power-meter b,.temperature-meter b { flex:1; background:#111; }.diagnostic-light { width:13px; height:13px; background:#f22; border:2px inset #eee; }.temperature-meter { min-width:270px; }.temperature-meter b { max-width:9px; }
-@media (max-width:760px) { .topbar{height:48px;min-height:48px}.brand{margin-left:0}.layout{grid-template-columns:1fr}.sidebar{display:block;border-right:0;border-bottom:2px solid #555}.side-nav{height:auto;min-height:210px;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,70px)}main>section,#works{padding:12px 8px 58px}.section-heading{margin:-12px -8px 12px}.camera-console{display:flex;flex-direction:column;min-height:auto;margin:0 -8px 12px!important}.camera-map{border-right:0;border-bottom:2px solid #555}.camera-buttons{padding:8px 0}.monitor-status{min-height:180px}.work-grid{display:grid;grid-column:auto;margin:0;padding:8px}.console-diagnostics{height:32px;font-size:9px}.temperature{display:none}.power-meter{min-width:100px} }
+@media (max-width:760px) { .topbar{height:48px;min-height:48px}.brand{margin-left:0}.layout{grid-template-columns:1fr}.sidebar{display:block;border-right:0;border-bottom:2px solid #555}.side-nav{height:auto;min-height:210px;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,70px)}main>section,#works{padding:12px 8px 58px}.section-heading{margin:-12px -8px 12px}.camera-console{display:block;min-height:620px;margin:0 -8px 12px!important}.camera-map{position:relative;inset:auto;width:auto;border-right:0;border-bottom:2px solid #555}.camera-buttons{padding:8px 0}.monitor-status{display:none}.work-grid{display:grid;position:absolute;top:190px;left:0;width:100%;height:430px;padding:46px 8px 8px;grid-template-columns:1fr 1fr}.work-grid::before{left:8px}.console-diagnostics{height:32px;font-size:9px}.temperature{display:none}.power-meter{min-width:100px} }
 </style>
 </head>
 
@@ -1997,17 +2001,34 @@ const portfolioSettings = {
     const workCards = Array.from(document.querySelectorAll(".work-card"));
     if (cameraButtons && workCards.length) {
         workCards.forEach(function (card, index) {
+            const description = card.dataset.description;
+            if (description && !card.querySelector(".work-description")) {
+                const descriptionElement = document.createElement("p");
+                descriptionElement.className = "work-description";
+                descriptionElement.textContent = description;
+                card.querySelector(".work-info")?.appendChild(descriptionElement);
+            }
             const button = document.createElement("button");
             button.type = "button";
             button.className = "camera-button";
             button.textContent = portfolioSettings.cameraNames[index] || `${portfolioSettings.cameraPrefix} ${index + 1}`;
             button.addEventListener("click", function () {
                 workCards.forEach(function (item) { item.classList.remove("camera-selected"); });
+                workCards.forEach(function (item) { item.classList.remove("is-camera-active"); });
                 document.querySelectorAll(".camera-button").forEach(function (item) { item.classList.remove("active"); });
                 card.classList.add("camera-selected");
+                card.classList.add("is-camera-active");
                 button.classList.add("active");
                 cameraReadout.textContent = button.textContent + " · " + (card.querySelector("h3")?.textContent || "PROJECT");
-                card.scrollIntoView({ behavior: "smooth", block: "center" });
+                const video = card.querySelector("video");
+                if (video) {
+                    const source = video.querySelector("source[data-src]");
+                    if (source && !source.src) source.src = source.dataset.src;
+                    video.muted = true;
+                    video.load();
+                    video.play().catch(function () {});
+                }
+                card.scrollIntoView({ behavior: "smooth", block: "nearest" });
             });
             cameraButtons.appendChild(button);
         });
