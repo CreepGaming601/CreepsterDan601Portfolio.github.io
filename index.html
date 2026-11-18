@@ -1252,8 +1252,6 @@ main > section > * { position:relative; z-index:1; }
 
 /* Reference-matched console geometry */
 .topbar { position:relative; display:flex; align-items:stretch; gap:0; min-height:42px; height:42px; padding:0; background:#c6c6c6; border-bottom:2px solid #555; box-shadow:inset 0 1px #fff; }
-.topbar::before { content:none; }
-.topbar > * { position:relative; z-index:1; }
 .brand { order:4; margin-left:auto; padding:4px 10px; min-width:190px; border-left:2px solid #777; }
 .brand-mark { display:none; }
 .brand-name { font-size:13px; }
@@ -1396,19 +1394,7 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 <style>
 /* Final console cleanup: keep the project dialog and clock in the same archive UI. */
 .console-clock::before { content:none; }
-.console-clock {
-    flex-basis:120px;
-    width:120px;
-    height:42px;
-    padding:3px 9px;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size:15px;
-    border:2px solid #777;
-    box-sizing:border-box;
-}
-.console-clock .clock-icon { color:#b40000; font-size:13px; }
-.console-clock .clock-time { font-size:15px; }
-.console-clock small { font-size:12px; }
+.console-clock .clock-icon { color:#b40000; font-size:11px; }
 
 .modal { padding:16px; background:rgba(0,0,0,.78); backdrop-filter:blur(3px); }
 .modal.open { background:rgba(0,0,0,.78); backdrop-filter:blur(3px); }
@@ -1735,33 +1721,28 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .camera-feed-image-hidden { display:none !important; }
 .work-grid .work-card.category-hidden { display:none !important; }
 .work-grid.render-mode {
-    display:block;
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
     height:auto;
     min-height:100%;
     overflow-y:auto !important;
-    overflow-x:hidden !important;
-    width:100%;
-    box-sizing:border-box;
     padding:28px 45px 35px;
-    column-count:2;
-    column-gap:14px;
-    column-fill:balance;
+    gap:14px;
 }
 .work-grid.render-mode .feed-heading,
 .work-grid.render-mode .camera-feed { display:none !important; }
 .work-grid.render-mode .work-card {
-    display:inline-block;
-    vertical-align:top;
+    display:block;
     width:100%;
     margin:0;
-    break-inside:avoid;
     height:auto;
     min-height:0;
     max-height:none;
     display:block;
     overflow:hidden;
     border-radius:10px !important;
-    background:#bbb;
+    background:#24182f;
     transform:none;
 }
 .work-grid.render-mode .work-card .work-image,
@@ -1779,16 +1760,15 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
     max-height:none;
     padding:12px;
     display:block;
-    background:#bbb;
-    color:#111;
+    background:#24182f;
+    color:#fff;
 }
 .work-grid.render-mode .work-card .work-info h3,
 .work-grid.render-mode .work-card .work-info p,
-.work-grid.render-mode .work-card .work-info .work-tag { color:#111; }
+.work-grid.render-mode .work-card .work-info .work-tag { color:#fff; }
 .work-grid.render-mode .work-card .work-info h3 { white-space:normal; overflow:visible; font-size:13px; }
 .work-grid.render-mode .work-card .work-info::after { display:none; }
-@media (max-width:760px) { .work-grid.render-mode { column-count:1; padding:22px 8px 35px; } }
-@media (max-width:760px) { .work-grid.render-mode { column-count:1; padding:22px 8px 35px; } }
+@media (max-width:760px) { .work-grid.render-mode { padding:22px 8px 35px; } }
 @media (max-width:760px) {
     .camera-buttons { padding:8px 0; }
     .archive-group summary { font-size:12px; padding:9px 10px; }
@@ -2573,16 +2553,12 @@ const portfolioSettings = {
         if (!localClock) return;
         const options = Intl.DateTimeFormat().resolvedOptions();
         const locale = navigator.language || "en-US";
-        const now = new Date();
-        const time = new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit" }).format(now);
-        const weekday = new Intl.DateTimeFormat(locale, { weekday: "long" }).format(now);
+        const time = new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit" }).format(new Date());
         const localeRegion = new Intl.Locale(locale).maximize().region;
         let country = localeRegion || options.timeZone || locale;
         try { country = new Intl.DisplayNames([locale], { type: "region" }).of(localeRegion) || country; } catch (error) { /* region code fallback */ }
         const timeElement = localClock.querySelector(".clock-time");
-        const dayElement = localClock.querySelector("small");
         if (timeElement) timeElement.textContent = time;
-        if (dayElement) dayElement.textContent = weekday;
         localClock.title = "Local time in " + country;
     }
     updateLocalClock();
@@ -3097,17 +3073,10 @@ const portfolioSettings = {
         });
     });
 
-    let projectPausedMusic = false;
-
     function openProject(card) {
 
         pauseBackground();
-
-        const mediaType = card.dataset.mediaType || "image";
-        projectPausedMusic = mediaType !== "image";
-        if (projectPausedMusic) {
-            pauseMusic();
-        }
+        pauseMusic();
 
         // The modal becomes the main focus, so stop background previews.
         document.querySelectorAll(".work-video").forEach(function (video) {
@@ -3122,6 +3091,7 @@ const portfolioSettings = {
 
         modalMedia.innerHTML = "";
 
+        const mediaType = card.dataset.mediaType || "image";
         const mediaPath = card.dataset.media || "";
 
         if (mediaType === "youtube") {
@@ -3178,10 +3148,7 @@ const portfolioSettings = {
         modal.classList.remove("open");
         document.body.classList.remove("modal-open");
         resumeBackground();
-        if (projectPausedMusic) {
-            resumeMusic();
-        }
-        projectPausedMusic = false;
+        resumeMusic();
 
         // Let visible previews continue after the modal closes.
         if (!document.hidden) {
