@@ -1369,13 +1369,19 @@ main > section::before { opacity:.12; }
 .monitor-status span:last-child { margin-left:auto; margin-top:3px; }
 .work-grid { position:absolute; z-index:3; top:0; right:0; bottom:0; width:calc(100% - 335px); overflow:auto; padding:75px 45px 35px; grid-template-columns:repeat(2,minmax(0,1fr)); background:#050606; }
 .work-grid::before { content:"LIVE PROJECT FEED"; position:absolute; top:18px; left:45px; color:#eee; font:700 12px monospace; letter-spacing:.1em; }
+.camera-feed { grid-column:1 / -1; position:relative; overflow:hidden; min-height:250px; background:#000; border:2px solid #888; box-shadow:inset 0 0 0 2px #111; }
+.camera-feed video,.camera-feed img { display:block; width:100%; height:250px; object-fit:cover; background:#000; }
+.camera-feed::before,.camera-feed::after { content:""; position:absolute; z-index:2; width:46px; height:46px; border-color:#eee; border-style:solid; pointer-events:none; }
+.camera-feed::before { left:12px; top:12px; border-width:3px 0 0 3px; }.camera-feed::after { right:12px; top:12px; border-width:3px 3px 0 0; }
+.camera-feed-label { position:absolute; z-index:3; left:18px; bottom:12px; color:#fff; font:700 12px monospace; text-shadow:0 1px 2px #000; }
+.camera-feed-rec { position:absolute; z-index:3; right:16px; top:15px; color:#f22; font:700 11px monospace; }
 .work-card.is-camera-active { outline:3px solid #ed1010; outline-offset:-3px; }
 .work-card .work-description { display:block; margin-top:8px; color:#222; font-size:12px; line-height:1.35; }
 .work-card { background:#111; border-color:#999; }
 .work-card .work-info { background:#bbb; }
 .console-diagnostics { position:fixed; z-index:70; bottom:0; left:0; right:0; height:38px; display:flex; justify-content:space-between; align-items:center; padding:4px 8px; background:#c6c6c6; border-top:2px solid #555; box-shadow:inset 0 1px #fff; color:#222; font-size:13px; }
 .diagnostic-group { display:flex; align-items:center; gap:7px; }.power-meter,.temperature-meter { display:flex; gap:2px; padding:2px; min-width:170px; height:14px; border:2px inset #eee; background:#eee; }.power-meter b,.temperature-meter b { flex:1; background:#111; }.diagnostic-light { width:13px; height:13px; background:#f22; border:2px inset #eee; }.temperature-meter { min-width:270px; }.temperature-meter b { max-width:9px; }
-@media (max-width:760px) { .topbar{height:48px;min-height:48px}.brand{margin-left:0}.layout{grid-template-columns:1fr}.sidebar{display:block;border-right:0;border-bottom:2px solid #555}.side-nav{height:auto;min-height:210px;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,70px)}main>section,#works{padding:12px 8px 58px}.section-heading{margin:-12px -8px 12px}.camera-console{display:block;min-height:620px;margin:0 -8px 12px!important}.camera-map{position:relative;inset:auto;width:auto;border-right:0;border-bottom:2px solid #555}.camera-buttons{padding:8px 0}.monitor-status{display:none}.work-grid{display:grid;position:absolute;top:190px;left:0;width:100%;height:430px;padding:46px 8px 8px;grid-template-columns:1fr 1fr}.work-grid::before{left:8px}.console-diagnostics{height:32px;font-size:9px}.temperature{display:none}.power-meter{min-width:100px} }
+@media (max-width:760px) { .topbar{height:48px;min-height:48px}.brand{margin-left:0}.layout{grid-template-columns:1fr}.sidebar{display:block;border-right:0;border-bottom:2px solid #555}.side-nav{height:auto;min-height:210px;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,70px)}main>section,#works{padding:12px 8px 58px}.section-heading{margin:-12px -8px 12px}.camera-console{display:block;min-height:620px;margin:0 -8px 12px!important}.camera-map{position:relative;inset:auto;width:auto;border-right:0;border-bottom:2px solid #555}.camera-buttons{padding:8px 0}.monitor-status{display:none}.work-grid{display:grid;position:absolute;top:190px;left:0;width:100%;height:430px;padding:46px 8px 8px;grid-template-columns:1fr 1fr}.work-grid::before{left:8px}.camera-feed{min-height:180px}.camera-feed video,.camera-feed img{height:180px}.console-diagnostics{height:32px;font-size:9px}.temperature{display:none}.power-meter{min-width:100px} }
 </style>
 </head>
 
@@ -1649,6 +1655,12 @@ main > section::before { opacity:.12; }
             </div>
 
             <div class="work-grid">
+
+                <div class="camera-feed" aria-live="polite">
+                    <video id="cameraFeed" muted loop autoplay playsinline preload="metadata"></video>
+                    <span class="camera-feed-label" id="cameraFeedLabel">CAM 1 · READY</span>
+                    <span class="camera-feed-rec">● REC</span>
+                </div>
 
                 <article
                     class="work-card"
@@ -1998,6 +2010,8 @@ const portfolioSettings = {
 
     const cameraButtons = document.getElementById("cameraButtons");
     const cameraReadout = document.getElementById("cameraReadout");
+    const cameraFeed = document.getElementById("cameraFeed");
+    const cameraFeedLabel = document.getElementById("cameraFeedLabel");
     const workCards = Array.from(document.querySelectorAll(".work-card"));
     if (cameraButtons && workCards.length) {
         workCards.forEach(function (card, index) {
@@ -2023,11 +2037,25 @@ const portfolioSettings = {
                 const video = card.querySelector("video");
                 if (video) {
                     const source = video.querySelector("source[data-src]");
+                    const feedSource = source?.dataset.src || source?.src;
                     if (source && !source.src) source.src = source.dataset.src;
                     video.muted = true;
                     video.load();
                     video.play().catch(function () {});
+                    if (cameraFeed && feedSource) {
+                        cameraFeed.src = feedSource;
+                        cameraFeed.muted = true;
+                        cameraFeed.loop = true;
+                        cameraFeed.load();
+                        cameraFeed.play().catch(function () {});
+                    }
+                } else if (cameraFeed) {
+                    const image = card.querySelector(".work-image");
+                    cameraFeed.removeAttribute("src");
+                    cameraFeed.poster = image?.src || "";
+                    cameraFeed.load();
                 }
+                if (cameraFeedLabel) cameraFeedLabel.textContent = button.textContent + " · " + (card.querySelector("h3")?.textContent || "PROJECT");
                 card.scrollIntoView({ behavior: "smooth", block: "nearest" });
             });
             cameraButtons.appendChild(button);
