@@ -1345,8 +1345,8 @@ main > section > * { position:relative; z-index:1; }
 .layout { max-width:none; grid-template-columns:335px minmax(0,1fr); gap:0; padding:0; min-height:calc(100vh - 74px); }
 .sidebar { position:relative; top:auto; padding:0; border:0; border-right:3px solid #555; border-radius:0; box-shadow:inset -2px 0 #eee; background:#bdbdbd; }
 .profile-mini { display:none; }
-.side-nav { display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin:0; padding:7px; border:0; background:#c6c6c6; }
-.side-nav a { min-height:44px; display:flex; align-items:center; justify-content:center; gap:3px; border:2px outset #eee; background:#d1d1d1; font-size:12px; }
+.side-nav { display:grid; grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(3,minmax(0,1fr)); gap:0; height:calc(100vh - 74px); margin:0; padding:8px; border:0; background:#c6c6c6; }
+.side-nav a { min-height:0; display:flex; align-items:center; justify-content:center; gap:3px; border:2px outset #eee; background:#d1d1d1; font-size:14px; }
 .side-nav a span { display:none; }
 .side-nav a.active,.side-nav a:hover { background:#aaa; border-style:inset; }
 main { padding:0; background:#191b1d; }
@@ -1371,7 +1371,7 @@ main > section::before { opacity:.12; }
 .work-card .work-info { background:#bbb; }
 .console-diagnostics { position:fixed; z-index:70; bottom:0; left:0; right:0; height:38px; display:flex; justify-content:space-between; align-items:center; padding:4px 8px; background:#c6c6c6; border-top:2px solid #555; box-shadow:inset 0 1px #fff; color:#222; font-size:13px; }
 .diagnostic-group { display:flex; align-items:center; gap:7px; }.power-meter,.temperature-meter { display:flex; gap:2px; padding:2px; min-width:170px; height:14px; border:2px inset #eee; background:#eee; }.power-meter b,.temperature-meter b { flex:1; background:#111; }.diagnostic-light { width:13px; height:13px; background:#f22; border:2px inset #eee; }.temperature-meter { min-width:270px; }.temperature-meter b { max-width:9px; }
-@media (max-width:760px) { .topbar{height:48px;min-height:48px}.console-clock,.console-status,.token-counter{display:none}.brand{margin-left:0}.layout{grid-template-columns:1fr}.sidebar{display:block;border-right:0;border-bottom:2px solid #555}.side-nav{grid-template-columns:repeat(3,1fr)}main>section,#works{padding:12px 8px 58px}.section-heading{margin:-12px -8px 12px}.camera-console{display:flex;flex-direction:column;min-height:auto;margin:0 -8px 12px!important}.camera-map{border-right:0;border-bottom:2px solid #555}.camera-buttons{padding:8px 0}.monitor-status{min-height:180px}.work-grid{display:grid;grid-column:auto;margin:0;padding:8px}.console-diagnostics{height:32px;font-size:9px}.temperature{display:none}.power-meter{min-width:100px} }
+@media (max-width:760px) { .topbar{height:48px;min-height:48px}.brand{margin-left:0}.layout{grid-template-columns:1fr}.sidebar{display:block;border-right:0;border-bottom:2px solid #555}.side-nav{height:auto;min-height:210px;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,70px)}main>section,#works{padding:12px 8px 58px}.section-heading{margin:-12px -8px 12px}.camera-console{display:flex;flex-direction:column;min-height:auto;margin:0 -8px 12px!important}.camera-map{border-right:0;border-bottom:2px solid #555}.camera-buttons{padding:8px 0}.monitor-status{min-height:180px}.work-grid{display:grid;grid-column:auto;margin:0;padding:8px}.console-diagnostics{height:32px;font-size:9px}.temperature{display:none}.power-meter{min-width:100px} }
 </style>
 </head>
 
@@ -1386,16 +1386,6 @@ main > section::before { opacity:.12; }
 
 <header class="topbar">
 
-    <div class="console-clock" aria-label="Current time">
-        <span id="consoleTime">12:00 AM</span>
-        <small>Custom</small>
-    </div>
-
-    <div class="console-status">
-        <span class="status-light"></span>
-        <span>Showroom</span>
-    </div>
-
     <div class="brand">
         <button class="brand-mark secret-button" id="secretButton" type="button" aria-label="Open secret sequence">
             ✦
@@ -1408,8 +1398,6 @@ main > section::before { opacity:.12; }
     </div>
 
     <nav class="top-links" aria-label="Top navigation">
-
-        <div class="token-counter">Tokens: <strong id="tokenCount">0</strong></div>
 
         <div class="music-control collapsed" id="musicControl" aria-label="Background music controls">
             <button class="music-expand" id="musicExpand" type="button" aria-label="Open music controls">♫</button>
