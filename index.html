@@ -1719,6 +1719,20 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .archive-group.is-closing .archive-group-list { max-height:0; opacity:0; padding-top:0; padding-bottom:0; }
 .archive-group .camera-button { width:100%; }
 .camera-feed-image-hidden { display:none !important; }
+.camera-map {
+    overflow-y:auto;
+    overflow-x:hidden;
+    scrollbar-width:thin;
+    scrollbar-color:#777 #bdbdbd;
+}
+.camera-map h3 {
+    position:sticky;
+    top:0;
+    z-index:3;
+}
+.camera-map::-webkit-scrollbar { width:10px; }
+.camera-map::-webkit-scrollbar-track { background:#bdbdbd; }
+.camera-map::-webkit-scrollbar-thumb { background:#777; border:2px solid #bdbdbd; }
 .work-grid .work-card.category-hidden { display:none !important; }
 .work-grid.render-mode {
     display:flex;
