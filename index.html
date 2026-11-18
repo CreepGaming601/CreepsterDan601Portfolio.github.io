@@ -1325,6 +1325,53 @@ main > section > * { position:relative; z-index:1; }
 .music-options { background:#c7c7c7; border:2px solid #555; border-radius:0; color:#111; }
 .music-options * { color:#111; }
 @media (max-width:760px) { .layout{grid-template-columns:1fr;padding:8px}.sidebar{position:relative}.camera-console{grid-template-columns:1fr}.work-grid{grid-template-columns:1fr}.topbar{height:auto;min-height:64px} }
+
+/* Reference-matched console geometry */
+.topbar { position:relative; display:flex; align-items:stretch; gap:0; min-height:42px; height:42px; padding:0; background:#c6c6c6; border-bottom:2px solid #555; box-shadow:inset 0 1px #fff; }
+.brand { order:4; margin-left:auto; padding:4px 10px; min-width:190px; border-left:2px solid #777; }
+.brand-mark { display:none; }
+.brand-name { font-size:13px; }
+.brand-subtitle { font-size:8px; }
+.console-clock { order:1; width:118px; padding:3px 8px; color:#222; border-right:2px solid #777; font-family:Arial,sans-serif; font-size:13px; line-height:1.1; }
+.console-clock::before { content:"▣"; color:#b40000; margin-right:6px; }
+.console-clock span,.console-clock small { display:block; }
+.console-clock small { margin-left:22px; font-size:11px; }
+.console-status { order:2; width:215px; padding:5px 8px; background:#eee; color:#222; border-right:2px solid #777; font-size:13px; }
+.status-light { display:block; height:18px; margin:-5px -8px 5px; background:#ed1010; border-bottom:2px solid #777; }
+.top-links { order:3; flex:1; justify-content:flex-end; padding:0 7px; }
+.token-counter { align-self:stretch; min-width:110px; padding:5px 8px; margin-right:8px; background:#eee; border:2px solid #888; color:#222; font-size:13px; }
+.token-counter strong { float:right; font-weight:400; }
+.theme-button,.music-expand { border:0; background:transparent; color:#222; }
+.layout { max-width:none; grid-template-columns:335px minmax(0,1fr); gap:0; padding:0; min-height:calc(100vh - 74px); }
+.sidebar { position:relative; top:auto; padding:0; border:0; border-right:3px solid #555; border-radius:0; box-shadow:inset -2px 0 #eee; background:#bdbdbd; }
+.profile-mini { display:none; }
+.side-nav { display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin:0; padding:7px; border:0; background:#c6c6c6; }
+.side-nav a { min-height:44px; display:flex; align-items:center; justify-content:center; gap:3px; border:2px outset #eee; background:#d1d1d1; font-size:12px; }
+.side-nav a span { display:none; }
+.side-nav a.active,.side-nav a:hover { background:#aaa; border-style:inset; }
+main { padding:0; background:#191b1d; }
+main > section { min-height:calc(100vh - 74px); margin:0; padding:18px 24px 70px; border:0; border-radius:0; box-shadow:none; background:#0c0e0f; }
+main > section::before { opacity:.12; }
+.section-heading { background:#c6c6c6; border:0; border-bottom:2px solid #555; margin:-18px -24px 18px; padding:5px 10px; min-height:32px; display:flex; align-items:center; justify-content:space-between; }
+.section-heading h2 { font-size:17px; margin:0; }.section-heading p { margin:0; font-size:12px; }
+#works .section-heading { display:none; }
+#works { padding:0 24px 70px; }
+#works .camera-console { margin:0 -24px 16px; }
+.camera-console { grid-template-columns:335px 1fr; min-height:calc(100vh - 110px); gap:0; }
+.camera-map { border:0; border-right:2px solid #555; border-radius:0; padding:16px; background:#bdbdbd; }
+.camera-map h3 { padding:7px; margin:-16px -16px 14px; background:#d2d2d2; border-bottom:2px solid #777; font-size:13px; }
+.camera-buttons { grid-template-columns:repeat(2,1fr); gap:8px; padding:25px 5px; }
+.camera-button { min-height:42px; font-size:13px; }
+.monitor-status { position:relative; min-height:0; border:0; background:#050606; padding:26px; align-items:flex-start; }
+.monitor-status::before,.monitor-status::after { content:""; position:absolute; width:78px; height:78px; border-color:#eee; border-style:solid; }
+.monitor-status::before { top:24px; left:22px; border-width:4px 0 0 4px; }.monitor-status::after { top:24px; right:22px; border-width:4px 4px 0 0; }
+.monitor-status span:last-child { margin-left:auto; margin-top:3px; }
+.work-grid { position:relative; z-index:2; padding:18px 45px 35px; grid-template-columns:repeat(2,minmax(0,1fr)); }
+.work-card { background:#111; border-color:#999; }
+.work-card .work-info { background:#bbb; }
+.console-diagnostics { position:fixed; z-index:70; bottom:0; left:0; right:0; height:38px; display:flex; justify-content:space-between; align-items:center; padding:4px 8px; background:#c6c6c6; border-top:2px solid #555; box-shadow:inset 0 1px #fff; color:#222; font-size:13px; }
+.diagnostic-group { display:flex; align-items:center; gap:7px; }.power-meter,.temperature-meter { display:flex; gap:2px; padding:2px; min-width:170px; height:14px; border:2px inset #eee; background:#eee; }.power-meter b,.temperature-meter b { flex:1; background:#111; }.diagnostic-light { width:13px; height:13px; background:#f22; border:2px inset #eee; }.temperature-meter { min-width:270px; }.temperature-meter b { max-width:9px; }
+@media (max-width:760px) { .topbar{height:48px;min-height:48px}.console-clock,.console-status,.token-counter{display:none}.brand{margin-left:0}.layout{grid-template-columns:1fr}.sidebar{display:block;border-right:0;border-bottom:2px solid #555}.side-nav{grid-template-columns:repeat(3,1fr)}main>section,#works{padding:12px 8px 58px}.section-heading{margin:-12px -8px 12px}.camera-console{display:flex;flex-direction:column;min-height:auto;margin:0 -8px 12px!important}.camera-map{border-right:0;border-bottom:2px solid #555}.camera-buttons{padding:8px 0}.monitor-status{min-height:180px}.work-grid{display:grid;grid-column:auto;margin:0;padding:8px}.console-diagnostics{height:32px;font-size:9px}.temperature{display:none}.power-meter{min-width:100px} }
 </style>
 </head>
 
@@ -1339,6 +1386,16 @@ main > section > * { position:relative; z-index:1; }
 
 <header class="topbar">
 
+    <div class="console-clock" aria-label="Current time">
+        <span id="consoleTime">12:00 AM</span>
+        <small>Custom</small>
+    </div>
+
+    <div class="console-status">
+        <span class="status-light"></span>
+        <span>Showroom</span>
+    </div>
+
     <div class="brand">
         <button class="brand-mark secret-button" id="secretButton" type="button" aria-label="Open secret sequence">
             ✦
@@ -1351,6 +1408,8 @@ main > section > * { position:relative; z-index:1; }
     </div>
 
     <nav class="top-links" aria-label="Top navigation">
+
+        <div class="token-counter">Tokens: <strong id="tokenCount">0</strong></div>
 
         <div class="music-control collapsed" id="musicControl" aria-label="Background music controls">
             <button class="music-expand" id="musicExpand" type="button" aria-label="Open music controls">♫</button>
@@ -1888,6 +1947,11 @@ main > section > * { position:relative; z-index:1; }
 
 </div>
 
+<div class="console-diagnostics" aria-label="System diagnostics">
+    <div class="diagnostic-group"><span>Power:</span><i class="power-meter" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></i><span class="diagnostic-light"></span></div>
+    <div class="diagnostic-group temperature"><span>Temperature:</span><i class="temperature-meter" aria-hidden="true"><b></b><b></b></i></div>
+</div>
+
 <div
     class="modal"
     id="projectModal"
@@ -1961,6 +2025,13 @@ const portfolioSettings = {
         });
         cameraButtons.querySelector(".camera-button")?.click();
     }
+
+    const consoleTime = document.getElementById("consoleTime");
+    function updateConsoleTime() {
+        if (consoleTime) consoleTime.textContent = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date());
+    }
+    updateConsoleTime();
+    window.setInterval(updateConsoleTime, 30000);
 
     const accordionButtons =
         document.querySelectorAll(".accordion button");
