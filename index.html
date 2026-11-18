@@ -1721,32 +1721,30 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .camera-feed-image-hidden { display:none !important; }
 .work-grid .work-card.category-hidden { display:none !important; }
 .work-grid.render-mode {
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    grid-template-rows:none;
-    grid-auto-rows:max-content;
-    grid-auto-flow:row;
-    align-items:start;
-    align-content:start;
+    display:block;
     height:auto;
     min-height:100%;
     overflow-y:auto !important;
     padding:28px 45px 35px;
-    gap:14px;
+    column-count:3;
+    column-gap:14px;
+    column-fill:balance;
 }
 .work-grid.render-mode .feed-heading,
 .work-grid.render-mode .camera-feed { display:none !important; }
 .work-grid.render-mode .work-card {
-    display:block;
+    display:inline-block;
+    vertical-align:top;
     width:100%;
-    margin:0;
+    margin:0 0 14px;
+    break-inside:avoid;
     height:auto;
     min-height:0;
     max-height:none;
     display:block;
     overflow:hidden;
     border-radius:10px !important;
-    background:#24182f;
+    background:#bbb;
     transform:none;
 }
 .work-grid.render-mode .work-card .work-image,
@@ -1764,16 +1762,16 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
     max-height:none;
     padding:12px;
     display:block;
-    background:#24182f;
-    color:#fff;
+    background:#bbb;
+    color:#111;
 }
 .work-grid.render-mode .work-card .work-info h3,
 .work-grid.render-mode .work-card .work-info p,
-.work-grid.render-mode .work-card .work-info .work-tag { color:#fff; }
+.work-grid.render-mode .work-card .work-info .work-tag { color:#111; }
 .work-grid.render-mode .work-card .work-info h3 { white-space:normal; overflow:visible; font-size:13px; }
 .work-grid.render-mode .work-card .work-info::after { display:none; }
-@media (max-width:1050px) { .work-grid.render-mode { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-@media (max-width:760px) { .work-grid.render-mode { grid-template-columns:1fr; padding:22px 8px 35px; } }
+@media (max-width:1050px) { .work-grid.render-mode { column-count:2; } }
+@media (max-width:760px) { .work-grid.render-mode { column-count:1; padding:22px 8px 35px; } }
 @media (max-width:760px) {
     .camera-buttons { padding:8px 0; }
     .archive-group summary { font-size:12px; padding:9px 10px; }
@@ -3078,10 +3076,17 @@ const portfolioSettings = {
         });
     });
 
+    let projectPausedMusic = false;
+
     function openProject(card) {
 
         pauseBackground();
-        pauseMusic();
+
+        const mediaType = card.dataset.mediaType || "image";
+        projectPausedMusic = mediaType !== "image";
+        if (projectPausedMusic) {
+            pauseMusic();
+        }
 
         // The modal becomes the main focus, so stop background previews.
         document.querySelectorAll(".work-video").forEach(function (video) {
@@ -3096,7 +3101,6 @@ const portfolioSettings = {
 
         modalMedia.innerHTML = "";
 
-        const mediaType = card.dataset.mediaType || "image";
         const mediaPath = card.dataset.media || "";
 
         if (mediaType === "youtube") {
@@ -3153,7 +3157,10 @@ const portfolioSettings = {
         modal.classList.remove("open");
         document.body.classList.remove("modal-open");
         resumeBackground();
-        resumeMusic();
+        if (projectPausedMusic) {
+            resumeMusic();
+        }
+        projectPausedMusic = false;
 
         // Let visible previews continue after the modal closes.
         if (!document.hidden) {
