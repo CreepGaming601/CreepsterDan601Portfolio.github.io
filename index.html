@@ -2502,12 +2502,10 @@ const portfolioSettings = {
             workGrid.appendChild(column);
             return column;
         });
-        renderCards.forEach(function (card) {
-            let shortest = columns[0];
-            columns.slice(1).forEach(function (column) {
-                if (column.getBoundingClientRect().height < shortest.getBoundingClientRect().height) shortest = column;
-            });
-            shortest.appendChild(card);
+        renderCards.forEach(function (card, index) {
+            // Distribute cards across all columns deterministically so unloaded
+            // image heights cannot send every card into the first column.
+            columns[index % columns.length].appendChild(card);
         });
     }
     function restoreRenderCards() {
