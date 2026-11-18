@@ -1421,6 +1421,26 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .modal-close { right:8px; top:4px; color:#111; font:700 22px Arial,sans-serif; z-index:2; }
 .modal-close:hover { color:#b40000; }
 </style>
+<style>
+/* Hide all recording indicators. */
+.work-card::before,
+.camera-feed-rec,
+.monitor-status strong { display:none !important; }
+
+/* Cover the REC mark embedded in the source video files. */
+.modal-media:has(video)::after {
+    content:"";
+    display:block;
+    position:absolute;
+    z-index:20;
+    top:0;
+    right:0;
+    width:96px;
+    height:42px;
+    background:#000;
+    pointer-events:none;
+}
+</style>
 </head>
 
 <body>
