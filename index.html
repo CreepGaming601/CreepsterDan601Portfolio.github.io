@@ -1354,6 +1354,20 @@ main > section#blogs::-webkit-scrollbar-thumb { background:#555; border:2px soli
     main > section#blogs { max-height:calc(100vh - 48px); overflow-y:auto; }
 }
 </style>
+<style>
+/* Sticky main monitor with a scrolling project archive below it. */
+.work-grid { overflow-y:auto; overflow-x:hidden; grid-template-rows:none; align-content:start; scrollbar-width:thin; scrollbar-color:#555 #050606; }
+.work-grid::-webkit-scrollbar { width:12px; }
+.work-grid::-webkit-scrollbar-track { background:#050606; }
+.work-grid::-webkit-scrollbar-thumb { background:#555; border:2px solid #050606; }
+.camera-feed { position:sticky; top:0; z-index:6; height:clamp(250px,42vh,420px); min-height:250px; }
+.work-grid .work-card { height:190px; min-height:190px; }
+@media (max-width:760px) {
+    .work-grid { overflow-y:auto; grid-template-rows:none; }
+    .camera-feed { position:sticky; top:0; height:180px; min-height:180px; }
+    .work-grid .work-card { height:150px; min-height:150px; }
+}
+</style>
 </head>
 
 <body>
