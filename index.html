@@ -1552,6 +1552,83 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
     #study .schedule-wrapper { max-height:calc(100vh - 150px); }
 }
 </style>
+<style>
+/* Keep schedule labels readable against the console grid. */
+#study .schedule-event,
+#study .schedule-event.daily-practice {
+    background:#c6c6c6 !important;
+    color:#111 !important;
+    border:2px outset #eee !important;
+    border-radius:0 !important;
+    font-family:Arial, Helvetica, sans-serif !important;
+    font-size:13px !important;
+    font-weight:700 !important;
+    text-shadow:none !important;
+    box-shadow:inset 1px 1px #fff, inset -1px -1px #777 !important;
+}
+#study .schedule-corner,
+#study .schedule-day {
+    color:#111 !important;
+    font-family:Arial, Helvetica, sans-serif !important;
+    font-weight:700 !important;
+}
+</style>
+<style>
+/* Make the About accordion readable in the gray console theme. */
+#about {
+    background:#0c0e0f !important;
+    color:#111;
+}
+#about .section-heading,
+#about .accordion button {
+    background:#c6c6c6 !important;
+    color:#111 !important;
+    border-color:#555 !important;
+}
+#about .section-heading h2,
+#about .section-heading p,
+#about .section-heading .eyebrow,
+#about .accordion button,
+#about .accordion button .arrow {
+    color:#111 !important;
+}
+#about .accordion-content {
+    background:#bdbdbd !important;
+    color:#111 !important;
+    border-color:#555 !important;
+}
+#about .accordion-content p {
+    color:#222 !important;
+    opacity:1 !important;
+    text-shadow:none !important;
+}
+</style>
+<style>
+/* Interactive archive-button feedback. */
+@keyframes archiveButtonScan {
+    0% { transform:translateX(0); box-shadow:inset 1px 1px #fff, inset -1px -1px #777; }
+    35% { transform:translateX(4px); background:#f0f0f0; box-shadow:inset 3px 3px #777, 0 0 0 2px #ed1010; }
+    100% { transform:translateX(0); box-shadow:inset 2px 2px #777, inset -2px -2px #eee; }
+}
+.camera-button {
+    position:relative;
+    overflow:hidden;
+    transition:background .15s ease, border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+.camera-button::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+    transform:translateX(-120%);
+    pointer-events:none;
+}
+.camera-button.clicked { animation:archiveButtonScan .42s ease-out; }
+.camera-button.clicked::after { animation:archiveButtonSweep .42s ease-out; }
+@keyframes archiveButtonSweep { to { transform:translateX(120%); } }
+.camera-button.active { background:#aaa; border-style:inset; box-shadow:inset 2px 2px #777, inset -2px -2px #eee; }
+.camera-button:focus-visible { outline:3px solid #ed1010; outline-offset:2px; }
+</style>
 </head>
 
 <body>
@@ -2126,7 +2203,7 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 
 <div class="console-diagnostics" aria-label="System diagnostics">
     <div class="diagnostic-group"><span>Power:</span><i class="power-meter" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></i><span class="diagnostic-light"></span></div>
-    <div class="diagnostic-group temperature"><span>Temperature:</span><i class="temperature-meter" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></i></div>
+    <div class="diagnostic-group temperature"><span>Temperature:</span><i class="temperature-meter" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></i></div>
 </div>
 
 <div
@@ -2201,6 +2278,10 @@ const portfolioSettings = {
             button.textContent = card.querySelector("h3")?.textContent.trim() || portfolioSettings.cameraNames[index] || `${portfolioSettings.cameraPrefix} ${index + 1}`;
             button.setAttribute("aria-label", "Play " + button.textContent);
             button.addEventListener("click", function () {
+                button.classList.remove("clicked");
+                void button.offsetWidth;
+                button.classList.add("clicked");
+                window.setTimeout(function () { button.classList.remove("clicked"); }, 450);
                 workCards.forEach(function (item) { item.classList.remove("camera-selected"); });
                 workCards.forEach(function (item) { item.classList.remove("is-camera-active"); });
                 document.querySelectorAll(".camera-button").forEach(function (item) { item.classList.remove("active"); });
