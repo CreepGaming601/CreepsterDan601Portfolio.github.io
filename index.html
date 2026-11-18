@@ -337,6 +337,10 @@ body.secret-open {
 .music-volume { width: 72px; accent-color: var(--green); }
 .music-mode { width:100%; padding:6px 8px; border:1px solid #777; background:#d8d8d8; color:#111; font:600 12px inherit; }
 .music-track-list { display:flex; flex-direction:column; gap:4px; max-height:150px; overflow-y:auto; border-top:1px solid #888; padding-top:7px; }
+.music-library-toggle { width:100%; padding:6px 8px !important; border:1px solid #777 !important; border-radius:0 !important; background:#c4c4c4 !important; color:#111 !important; text-align:left; font-size:11px !important; font-weight:700 !important; }
+.music-library-toggle::after { content:"−"; float:right; font-size:15px; line-height:11px; }
+.music-options.track-list-collapsed .music-library-toggle::after { content:"+"; }
+.music-options.track-list-collapsed .music-track-list { display:none; }
 .music-track { width:100%; padding:7px 8px !important; border:1px solid #999 !important; border-radius:0 !important; background:#d8d8d8 !important; color:#111 !important; text-align:left; font-size:11px !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .music-track:hover, .music-track.active { background:#aaa !important; border-color:#222 !important; }
 
@@ -1878,6 +1882,7 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
                     <option value="repeat">Repeat this song</option>
                     <option value="order">Play in order</option>
                 </select>
+                <button class="music-library-toggle" id="musicLibraryToggle" type="button" aria-expanded="true">Available songs</button>
                 <div class="music-track-list" id="musicTrackList" aria-label="Available songs"></div>
             </div>
         </div>
@@ -2759,6 +2764,7 @@ const portfolioSettings = {
 
     const musicMode = document.getElementById("musicMode");
     const musicTrackList = document.getElementById("musicTrackList");
+    const musicLibraryToggle = document.getElementById("musicLibraryToggle");
 
     const musicPanel =
         document.querySelector(".music-options");
@@ -2889,6 +2895,11 @@ const portfolioSettings = {
         musicExpand.setAttribute("aria-label", musicControl.classList.contains("collapsed")
             ? "Open music controls"
             : "Collapse music controls");
+    });
+
+    musicLibraryToggle.addEventListener("click", function () {
+        const collapsed = musicPanel.classList.toggle("track-list-collapsed");
+        musicLibraryToggle.setAttribute("aria-expanded", String(!collapsed));
     });
 
     function tryAutostartMusic() {
