@@ -1718,6 +1718,8 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .archive-group.is-open .archive-group-list { max-height:520px; opacity:1; padding-top:10px; padding-bottom:10px; }
 .archive-group.is-closing .archive-group-list { max-height:0; opacity:0; padding-top:0; padding-bottom:0; }
 .archive-group .camera-button { width:100%; }
+.camera-feed-image-hidden { display:none !important; }
+.work-grid .work-card.category-hidden { display:none !important; }
 @media (max-width:760px) {
     .camera-buttons { padding:8px 0; }
     .archive-group summary { font-size:12px; padding:9px 10px; }
@@ -2014,6 +2016,7 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 
                 <div class="camera-feed" aria-live="polite">
                     <video id="cameraFeed" muted loop autoplay playsinline preload="metadata"></video>
+                    <img id="cameraFeedImage" class="camera-feed-image-hidden" alt="Selected project render">
                     <span class="camera-feed-label" id="cameraFeedLabel">CAM 1 · READY</span>
                 </div>
 
@@ -2366,6 +2369,7 @@ const portfolioSettings = {
     const cameraButtons = document.getElementById("cameraButtons");
     const cameraReadout = document.getElementById("cameraReadout");
     const cameraFeed = document.getElementById("cameraFeed");
+    const cameraFeedImage = document.getElementById("cameraFeedImage");
     const cameraFeedLabel = document.getElementById("cameraFeedLabel");
     const workCards = Array.from(document.querySelectorAll(".work-card"));
     if (cameraButtons && workCards.length) {
@@ -2393,9 +2397,19 @@ const portfolioSettings = {
                 card.classList.add("camera-selected");
                 card.classList.add("is-camera-active");
                 button.classList.add("active");
+                const selectedCategory = (card.dataset.category || "animation").toLowerCase();
+                workCards.forEach(function (item) {
+                    const itemCategory = (item.dataset.category || "animation").toLowerCase();
+                    item.classList.toggle("category-hidden", itemCategory !== selectedCategory);
+                });
                 cameraReadout.textContent = button.textContent + " · " + (card.querySelector("h3")?.textContent || "PROJECT");
                 const video = card.querySelector("video");
                 if (video) {
+                    if (cameraFeedImage) {
+                        cameraFeedImage.classList.add("camera-feed-image-hidden");
+                        cameraFeedImage.removeAttribute("src");
+                    }
+                    if (cameraFeed) cameraFeed.style.display = "block";
                     const source = video.querySelector("source[data-src]");
                     const feedSource = source?.dataset.src || source?.src;
                     if (source && !source.src) source.src = source.dataset.src;
@@ -2409,11 +2423,16 @@ const portfolioSettings = {
                         cameraFeed.load();
                         cameraFeed.play().catch(function () {});
                     }
-                } else if (cameraFeed) {
+                } else if (cameraFeedImage) {
                     const image = card.querySelector(".work-image");
-                    cameraFeed.removeAttribute("src");
-                    cameraFeed.poster = image?.src || "";
-                    cameraFeed.load();
+                    if (cameraFeed) {
+                        cameraFeed.pause();
+                        cameraFeed.removeAttribute("src");
+                        cameraFeed.style.display = "none";
+                        cameraFeed.load();
+                    }
+                    cameraFeedImage.src = image?.currentSrc || image?.src || card.dataset.media || "";
+                    cameraFeedImage.classList.remove("camera-feed-image-hidden");
                 }
                 if (cameraFeedLabel) cameraFeedLabel.textContent = button.textContent + " · " + (card.querySelector("h3")?.textContent || "PROJECT");
                 card.scrollIntoView({ behavior: "smooth", block: "nearest" });
