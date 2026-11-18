@@ -3144,10 +3144,20 @@ const portfolioSettings = {
         });
     });
 
+    let projectPausedMusic = false;
+
     function openProject(card) {
 
         pauseBackground();
-        pauseMusic();
+
+        // Render cards are still images, so opening one must not interrupt
+        // the soundtrack. Animation projects temporarily pause the music.
+        const projectCategory = (card.dataset.category ||
+            (card.dataset.mediaType === "image" ? "render" : "animation")).toLowerCase();
+        projectPausedMusic = projectCategory === "animation";
+        if (projectPausedMusic) {
+            pauseMusic();
+        }
 
         // The modal becomes the main focus, so stop background previews.
         document.querySelectorAll(".work-video").forEach(function (video) {
@@ -3219,7 +3229,10 @@ const portfolioSettings = {
         modal.classList.remove("open");
         document.body.classList.remove("modal-open");
         resumeBackground();
-        resumeMusic();
+        if (projectPausedMusic) {
+            projectPausedMusic = false;
+            resumeMusic();
+        }
 
         // Let visible previews continue after the modal closes.
         if (!document.hidden) {
