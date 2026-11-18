@@ -1499,6 +1499,59 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .power-meter b.is-active,
 .temperature-meter b.is-active { opacity:1; }
 </style>
+<style>
+/* Schedule console cleanup and reliable internal scrolling. */
+#study {
+    background:#0c0e0f !important;
+    color:#111;
+    padding:0 24px 24px !important;
+}
+#study .section-heading {
+    margin:0 -24px 18px;
+    background:#c6c6c6;
+    border-bottom:2px solid #555;
+    color:#111;
+}
+#study .section-heading h2,
+#study .section-heading p,
+#study .section-heading .eyebrow { color:#111; }
+#study .schedule-wrapper {
+    max-height:calc(100vh - 190px);
+    overflow:auto;
+    border:2px solid #555;
+    border-radius:0;
+    background:#bdbdbd;
+}
+#study .schedule-board {
+    min-width:760px;
+    background:#bdbdbd;
+    border:0;
+    border-radius:0;
+}
+#study .schedule-corner,
+#study .schedule-day {
+    background:#d0d0d0;
+    color:#111;
+    border-color:#777;
+}
+#study .schedule-times { color:#222; }
+#study .schedule-slots {
+    background:repeating-linear-gradient(to bottom, transparent 0, transparent 27px, #777 27px, #777 28px);
+}
+#study .schedule-event {
+    border:2px outset #eee;
+    border-radius:0;
+    background:#aaa;
+    color:#111;
+    box-shadow:inset 1px 1px #eee, inset -1px -1px #777;
+}
+#study .schedule-note { color:#ddd; }
+@media (max-width:760px) {
+    #study { padding:0 8px 32px !important; }
+    #study .section-heading { margin:0 -8px 12px; }
+    #study .schedule-wrapper { max-height:calc(100vh - 150px); }
+}
+</style>
 </head>
 
 <body>
@@ -2073,7 +2126,7 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 
 <div class="console-diagnostics" aria-label="System diagnostics">
     <div class="diagnostic-group"><span>Power:</span><i class="power-meter" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></i><span class="diagnostic-light"></span></div>
-    <div class="diagnostic-group temperature"><span>Temperature:</span><i class="temperature-meter" aria-hidden="true"><b></b><b></b></i></div>
+    <div class="diagnostic-group temperature"><span>Temperature:</span><i class="temperature-meter" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></i></div>
 </div>
 
 <div
