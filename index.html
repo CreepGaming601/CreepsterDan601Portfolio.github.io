@@ -1489,6 +1489,16 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
     padding-top:2px;
 }
 </style>
+<style>
+/* Small ambient movement for the console diagnostics. */
+.power-meter b,
+.temperature-meter b {
+    opacity:.18;
+    transition:opacity .35s ease, background-color .35s ease;
+}
+.power-meter b.is-active,
+.temperature-meter b.is-active { opacity:1; }
+</style>
 </head>
 
 <body>
@@ -2189,6 +2199,29 @@ const portfolioSettings = {
     }
     updateLocalClock();
     window.setInterval(updateLocalClock, 1000);
+
+    // Make the bottom console feel alive without changing the page layout.
+    const powerBars = [...document.querySelectorAll(".power-meter b")];
+    const temperatureBars = [...document.querySelectorAll(".temperature-meter b")];
+    let powerLevel = Math.max(1, Math.min(powerBars.length, 7));
+    let temperatureLevel = 1;
+
+    function renderDiagnostics() {
+        powerBars.forEach((bar, index) => bar.classList.toggle("is-active", index < powerLevel));
+        temperatureBars.forEach((bar, index) => bar.classList.toggle("is-active", index < temperatureLevel));
+    }
+
+    function changeDiagnosticLevel(current, maximum) {
+        const direction = Math.random() < .5 ? -1 : 1;
+        return Math.max(0, Math.min(maximum, current + direction));
+    }
+
+    renderDiagnostics();
+    window.setInterval(function () {
+        powerLevel = changeDiagnosticLevel(powerLevel, powerBars.length);
+        temperatureLevel = changeDiagnosticLevel(temperatureLevel, temperatureBars.length);
+        renderDiagnostics();
+    }, 2200);
 
     const accordionButtons =
         document.querySelectorAll(".accordion button");
