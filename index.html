@@ -1299,7 +1299,8 @@ main > section::before { opacity:.12; }
 .monitor-status::before { top:24px; left:22px; border-width:4px 0 0 4px; }.monitor-status::after { top:24px; right:22px; border-width:4px 4px 0 0; }
 .monitor-status span:last-child { margin-left:auto; margin-top:3px; }
 .work-grid { position:absolute; z-index:3; top:0; right:0; bottom:0; width:calc(100% - 335px); overflow:auto; padding:75px 45px 35px; grid-template-columns:repeat(2,minmax(0,1fr)); background:#050606; }
-.work-grid::before { content:"LIVE PROJECT FEED"; position:absolute; top:18px; left:45px; color:#eee; font:700 12px monospace; letter-spacing:.1em; }
+.work-grid::before { content:none; }
+.feed-heading { position:sticky; top:0; z-index:8; grid-column:1 / -1; grid-row:1; align-self:start; height:28px; padding:5px 0; background:#050606; color:#eee; font:700 12px monospace; letter-spacing:.1em; }
 .camera-feed { grid-column:1 / -1; position:relative; overflow:hidden; min-height:250px; background:#000; border:2px solid #888; box-shadow:inset 0 0 0 2px #111; }
 .camera-feed video,.camera-feed img { display:block; width:100%; height:250px; object-fit:cover; background:#000; }
 .camera-feed::before,.camera-feed::after { content:""; position:absolute; z-index:2; width:46px; height:46px; border-color:#eee; border-style:solid; pointer-events:none; }
@@ -1362,11 +1363,21 @@ main > section#blogs::-webkit-scrollbar-thumb { background:#555; border:2px soli
 .work-grid::-webkit-scrollbar-track { background:#050606; }
 .work-grid::-webkit-scrollbar-thumb { background:#555; border:2px solid #050606; }
 .camera-feed { position:sticky !important; top:0; z-index:6; height:clamp(250px,42vh,420px); min-height:250px; }
-.work-grid .camera-feed { grid-column:1 / -1; flex:none; }
+.work-grid .camera-feed { grid-column:1 / -1; grid-row:1; flex:none; }
 .work-grid .work-card { height:190px; min-height:190px; max-height:190px; overflow:hidden; display:grid; grid-template-rows:148px 42px; contain:none; }
 .work-grid .work-card .work-image,
 .work-grid .work-card .work-video { width:100%; height:148px; min-height:148px; max-height:148px; display:block; }
 .work-grid .work-card .work-info { height:42px; min-height:42px; max-height:42px; display:flex; align-items:center; }
+.work-grid .work-card .work-image,
+.work-grid .work-card .work-video { object-fit:cover; object-position:center; background:#000; }
+.work-grid .work-card { cursor:pointer; position:relative; transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
+.work-grid .work-card::after { content:"CLICK TO VIEW"; position:absolute; inset:0; z-index:4; display:flex; align-items:center; justify-content:center; color:#fff; background:rgba(0,0,0,.58); font:700 13px monospace; letter-spacing:.1em; opacity:0; transition:opacity .15s ease; pointer-events:none; }
+.work-grid .work-card:hover,
+.work-grid .work-card:focus-visible { transform:translateY(-2px); border-color:#f22; box-shadow:0 0 0 2px #f22, 0 0 18px rgba(255,0,0,.35); outline:none; }
+.work-grid .work-card:hover::after,
+.work-grid .work-card:focus-visible::after { opacity:1; }
+.work-grid .work-card .work-info::after { content:"▶ OPEN PROJECT"; margin-left:auto; color:#8b0000; font:700 10px monospace; white-space:nowrap; }
+@media (hover:none) { .work-grid .work-card::after { content:"TAP TO VIEW"; opacity:.78; inset:auto 0 42px; height:28px; background:rgba(0,0,0,.5); } }
 @media (max-width:760px) {
     .work-grid { overflow-y:auto; grid-template-rows:180px repeat(3,150px); }
     .camera-feed { position:sticky; top:0; height:180px; min-height:180px; }
@@ -1651,6 +1662,8 @@ main > section#blogs::-webkit-scrollbar-thumb { background:#555; border:2px soli
             </div>
 
             <div class="work-grid">
+
+                <div class="feed-heading">LIVE PROJECT FEED</div>
 
                 <div class="camera-feed" aria-live="polite">
                     <video id="cameraFeed" muted loop autoplay playsinline preload="metadata"></video>
