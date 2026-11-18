@@ -1759,6 +1759,12 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
     align-content:start;
     gap:0 14px;
 }
+.work-grid.render-mode .render-column {
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    min-width:0;
+}
 .work-grid.render-mode .feed-heading,
 .work-grid.render-mode .camera-feed { display:none !important; }
 .work-grid.render-mode .work-card {
@@ -2482,6 +2488,33 @@ const portfolioSettings = {
     const workGrid = document.querySelector(".work-grid");
     const cameraFeedLabel = document.getElementById("cameraFeedLabel");
     const workCards = Array.from(document.querySelectorAll(".work-card"));
+    const renderCards = workCards.filter(function (card) {
+        return (card.dataset.category || (card.dataset.mediaType === "image" ? "render" : "animation")).toLowerCase() === "render";
+    });
+    const renderOriginalParent = workGrid;
+    function arrangeRenderMasonry() {
+        if (!workGrid || !renderCards.length) return;
+        workGrid.querySelectorAll(".render-column").forEach(function (column) { column.remove(); });
+        renderCards.forEach(function (card) { card.remove(); });
+        const columns = [0, 1, 2].map(function () {
+            const column = document.createElement("div");
+            column.className = "render-column";
+            workGrid.appendChild(column);
+            return column;
+        });
+        renderCards.forEach(function (card) {
+            let shortest = columns[0];
+            columns.slice(1).forEach(function (column) {
+                if (column.getBoundingClientRect().height < shortest.getBoundingClientRect().height) shortest = column;
+            });
+            shortest.appendChild(card);
+        });
+    }
+    function restoreRenderCards() {
+        if (!workGrid) return;
+        workGrid.querySelectorAll(".render-column").forEach(function (column) { column.remove(); });
+        renderCards.forEach(function (card) { renderOriginalParent.appendChild(card); });
+    }
     if (cameraButtons && workCards.length) {
         workCards.forEach(function (card, index) {
             const description = card.dataset.description;
@@ -2508,7 +2541,11 @@ const portfolioSettings = {
                 card.classList.add("is-camera-active");
                 button.classList.add("active");
                 const selectedCategory = (card.dataset.category || (card.dataset.mediaType === "image" ? "render" : "animation")).toLowerCase();
-                if (workGrid) workGrid.classList.toggle("render-mode", selectedCategory === "render");
+                if (workGrid) {
+                    workGrid.classList.toggle("render-mode", selectedCategory === "render");
+                    if (selectedCategory === "render") arrangeRenderMasonry();
+                    else restoreRenderCards();
+                }
                 workCards.forEach(function (item) {
                     const itemCategory = (item.dataset.category || (item.dataset.mediaType === "image" ? "render" : "animation")).toLowerCase();
                     item.classList.toggle("category-hidden", itemCategory !== selectedCategory);
