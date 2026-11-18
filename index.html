@@ -1252,6 +1252,8 @@ main > section > * { position:relative; z-index:1; }
 
 /* Reference-matched console geometry */
 .topbar { position:relative; display:flex; align-items:stretch; gap:0; min-height:42px; height:42px; padding:0; background:#c6c6c6; border-bottom:2px solid #555; box-shadow:inset 0 1px #fff; }
+.topbar::before { content:""; position:absolute; z-index:0; left:120px; top:0; width:215px; height:42px; background:#ed1010; border-right:2px solid #777; box-shadow:inset 0 1px #fff; }
+.topbar > * { position:relative; z-index:1; }
 .brand { order:4; margin-left:auto; padding:4px 10px; min-width:190px; border-left:2px solid #777; }
 .brand-mark { display:none; }
 .brand-name { font-size:13px; }
@@ -1395,8 +1397,8 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 /* Final console cleanup: keep the project dialog and clock in the same archive UI. */
 .console-clock::before { content:none; }
 .console-clock {
-    flex-basis:135px;
-    width:135px;
+    flex-basis:120px;
+    width:120px;
     height:42px;
     padding:3px 9px;
     font-family:Arial, Helvetica, sans-serif;
@@ -1746,7 +1748,7 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
     display:inline-block;
     vertical-align:top;
     width:100%;
-    margin:0 0 14px;
+    margin:0;
     break-inside:avoid;
     height:auto;
     min-height:0;
