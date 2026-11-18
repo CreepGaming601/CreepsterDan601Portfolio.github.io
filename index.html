@@ -1357,15 +1357,23 @@ main > section#blogs::-webkit-scrollbar-thumb { background:#555; border:2px soli
 <style>
 /* Sticky main monitor with a scrolling project archive below it. */
 .work-grid { overflow-y:auto; overflow-x:hidden; grid-template-rows:none; align-content:start; scrollbar-width:thin; scrollbar-color:#555 #050606; }
+.work-grid { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:clamp(250px,42vh,420px) repeat(3,190px); grid-auto-rows:190px; contain:layout paint; }
 .work-grid::-webkit-scrollbar { width:12px; }
 .work-grid::-webkit-scrollbar-track { background:#050606; }
 .work-grid::-webkit-scrollbar-thumb { background:#555; border:2px solid #050606; }
 .camera-feed { position:sticky; top:0; z-index:6; height:clamp(250px,42vh,420px); min-height:250px; }
-.work-grid .work-card { height:190px; min-height:190px; }
+.work-grid .camera-feed { grid-column:1 / -1; flex:none; }
+.work-grid .work-card { height:190px; min-height:190px; max-height:190px; overflow:hidden; display:grid; grid-template-rows:148px 42px; contain:layout paint; }
+.work-grid .work-card .work-image,
+.work-grid .work-card .work-video { width:100%; height:148px; min-height:148px; max-height:148px; display:block; }
+.work-grid .work-card .work-info { height:42px; min-height:42px; max-height:42px; display:flex; align-items:center; }
 @media (max-width:760px) {
-    .work-grid { overflow-y:auto; grid-template-rows:none; }
+    .work-grid { overflow-y:auto; grid-template-rows:180px repeat(3,150px); }
     .camera-feed { position:sticky; top:0; height:180px; min-height:180px; }
-    .work-grid .work-card { height:150px; min-height:150px; }
+    .work-grid .work-card { height:150px; min-height:150px; max-height:150px; grid-template-rows:115px 35px; }
+    .work-grid .work-card .work-image,
+    .work-grid .work-card .work-video { height:115px; min-height:115px; max-height:115px; }
+    .work-grid .work-card .work-info { height:35px; min-height:35px; max-height:35px; }
 }
 </style>
 </head>
