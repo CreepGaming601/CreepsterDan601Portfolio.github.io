@@ -1406,7 +1406,7 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 
     <div class="console-clock" id="localClock" aria-live="polite">
         <span class="clock-icon">▣</span>
-        <span class="clock-time">--:--:--</span>
+        <span class="clock-time">--:-- --</span>
         <small>Custom</small>
     </div>
 
@@ -2082,7 +2082,7 @@ const portfolioSettings = {
         if (!localClock) return;
         const options = Intl.DateTimeFormat().resolvedOptions();
         const locale = navigator.language || "en-US";
-        const time = new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit", second: "2-digit" }).format(new Date());
+        const time = new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit" }).format(new Date());
         const localeRegion = new Intl.Locale(locale).maximize().region;
         let country = localeRegion || options.timeZone || locale;
         try { country = new Intl.DisplayNames([locale], { type: "region" }).of(localeRegion) || country; } catch (error) { /* region code fallback */ }
