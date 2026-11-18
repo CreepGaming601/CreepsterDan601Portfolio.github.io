@@ -1804,6 +1804,15 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .work-grid.render-mode .work-card .work-info .work-tag { color:#111; }
 .work-grid.render-mode .work-card .work-info h3 { white-space:normal; overflow:visible; font-size:13px; }
 .work-grid.render-mode .work-card .work-info::after { display:none; }
+.work-grid.archive-switching {
+    opacity:0;
+    transform:translateY(8px);
+}
+.work-grid {
+    opacity:1;
+    transform:translateY(0);
+    transition:opacity .24s ease, transform .24s ease;
+}
 @media (max-width:1050px) { .work-grid.render-mode { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:760px) { .work-grid.render-mode { grid-template-columns:1fr; padding:22px 8px 35px; } }
 @media (max-width:760px) {
@@ -2546,9 +2555,21 @@ const portfolioSettings = {
                 button.classList.add("active");
                 const selectedCategory = (card.dataset.category || (card.dataset.mediaType === "image" ? "render" : "animation")).toLowerCase();
                 if (workGrid) {
-                    workGrid.classList.toggle("render-mode", selectedCategory === "render");
-                    if (selectedCategory === "render") arrangeRenderMasonry();
-                    else restoreRenderCards();
+                    const categoryChanged = workGrid.classList.contains("render-mode") !== (selectedCategory === "render");
+                    const switchArchive = function () {
+                        workGrid.classList.toggle("render-mode", selectedCategory === "render");
+                        if (selectedCategory === "render") arrangeRenderMasonry();
+                        else restoreRenderCards();
+                        void workGrid.offsetWidth;
+                        workGrid.classList.remove("archive-switching");
+                    };
+
+                    if (categoryChanged) {
+                        workGrid.classList.add("archive-switching");
+                        window.setTimeout(switchArchive, 180);
+                    } else {
+                        switchArchive();
+                    }
                 }
                 workCards.forEach(function (item) {
                     const itemCategory = (item.dataset.category || (item.dataset.mediaType === "image" ? "render" : "animation")).toLowerCase();
