@@ -2203,23 +2203,31 @@ const portfolioSettings = {
     // Make the bottom console feel alive without changing the page layout.
     const powerBars = [...document.querySelectorAll(".power-meter b")];
     const temperatureBars = [...document.querySelectorAll(".temperature-meter b")];
-    let powerLevel = Math.max(1, Math.min(powerBars.length, 7));
-    let temperatureLevel = 1;
+    let powerLevel = powerBars.length;
+    let temperatureLevel = 0;
 
     function renderDiagnostics() {
         powerBars.forEach((bar, index) => bar.classList.toggle("is-active", index < powerLevel));
         temperatureBars.forEach((bar, index) => bar.classList.toggle("is-active", index < temperatureLevel));
     }
 
-    function changeDiagnosticLevel(current, maximum) {
+    function changeTemperatureLevel(current, maximum) {
         const direction = Math.random() < .5 ? -1 : 1;
         return Math.max(0, Math.min(maximum, current + direction));
     }
 
+    function changePowerLevel(current, maximum) {
+        // Power mostly drains one bar, but occasional recovery can add up to three.
+        const change = Math.random() < .35
+            ? Math.floor(Math.random() * 3) + 1
+            : -1;
+        return Math.max(0, Math.min(maximum, current + change));
+    }
+
     renderDiagnostics();
     window.setInterval(function () {
-        powerLevel = changeDiagnosticLevel(powerLevel, powerBars.length);
-        temperatureLevel = changeDiagnosticLevel(temperatureLevel, temperatureBars.length);
+        powerLevel = changePowerLevel(powerLevel, powerBars.length);
+        temperatureLevel = changeTemperatureLevel(temperatureLevel, temperatureBars.length);
         renderDiagnostics();
     }, 2200);
 
