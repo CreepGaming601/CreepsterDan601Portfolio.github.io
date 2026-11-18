@@ -1704,6 +1704,23 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 #about .accordion-content p { color:#111 !important; line-height:1.55; }
 @keyframes aboutHeaderSweep { to { transform:translateX(120%); } }
 </style>
+<style>
+/* Separate project types into clean expandable archive menus. */
+.camera-buttons { display:flex; flex-direction:column; gap:10px; padding:12px 5px; }
+.archive-group { border:2px solid #777; background:#c6c6c6; box-shadow:inset 1px 1px #fff, inset -1px -1px #999; }
+.archive-group summary { list-style:none; cursor:pointer; padding:11px 12px; background:#d8d8d8; color:#111; font-size:13px; font-weight:700; border-bottom:2px solid #777; user-select:none; }
+.archive-group summary::-webkit-details-marker { display:none; }
+.archive-group summary::after { content:"+"; float:right; font-size:18px; line-height:12px; }
+.archive-group[open] summary::after { content:"−"; }
+.archive-group summary:hover { background:#eee; }
+.archive-group-list { display:flex; flex-direction:column; gap:8px; padding:10px; }
+.archive-group .camera-button { width:100%; }
+@media (max-width:760px) {
+    .camera-buttons { padding:8px 0; }
+    .archive-group summary { font-size:12px; padding:9px 10px; }
+    .archive-group-list { gap:6px; padding:7px; }
+}
+</style>
 </head>
 
 <body>
@@ -1970,7 +1987,16 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
             <div class="camera-console" aria-label="Project camera controls">
                 <div class="camera-map">
                     <h3>Animation archive</h3>
-                    <div class="camera-buttons" id="cameraButtons"></div>
+                    <div class="camera-buttons" id="cameraButtons">
+                        <details class="archive-group" open>
+                            <summary>3D Animations</summary>
+                            <div class="archive-group-list" data-camera-category="animation"></div>
+                        </details>
+                        <details class="archive-group" open>
+                            <summary>3D Renders</summary>
+                            <div class="archive-group-list" data-camera-category="render"></div>
+                        </details>
+                    </div>
                 </div>
                 <div class="monitor-status">
                     <span><strong>● REC</strong> &nbsp; PROJECT MONITOR</span>
@@ -2388,7 +2414,10 @@ const portfolioSettings = {
                 if (cameraFeedLabel) cameraFeedLabel.textContent = button.textContent + " · " + (card.querySelector("h3")?.textContent || "PROJECT");
                 card.scrollIntoView({ behavior: "smooth", block: "nearest" });
             });
-            cameraButtons.appendChild(button);
+            const category = (card.dataset.category || "animation").toLowerCase();
+            const categoryList = cameraButtons.querySelector('[data-camera-category="' + category + '"]')
+                || cameraButtons.querySelector('[data-camera-category="animation"]');
+            categoryList.appendChild(button);
         });
         cameraButtons.querySelector(".camera-button")?.click();
     }
