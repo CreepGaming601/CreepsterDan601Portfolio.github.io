@@ -2019,7 +2019,11 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .blog-filter-bar { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
 .blog-filter { min-height:30px; padding:6px 11px; border:2px outset #eee; background:#d4d4d4; color:#111; font:700 11px Arial,sans-serif; cursor:pointer; }
 .blog-filter:hover, .blog-filter.active { background:#aaa; border-style:inset; }
-.blog-post-list { display:grid; gap:10px; }
+.blog-filter:active { transform:translateY(1px); }
+@keyframes blogFilterPulse { 0% { transform:translateY(0); } 40% { transform:translateY(2px); background:#999; } 100% { transform:translateY(0); } }
+.blog-filter.clicked { animation:blogFilterPulse .28s ease-out; }
+.blog-post-list { display:grid; gap:10px; opacity:1; transform:translateY(0); transition:opacity .22s ease, transform .22s ease; }
+.blog-post-list.blog-posts-changing { opacity:0; transform:translateY(7px); }
 .blog-post { background:#c6c6c6; border:2px solid #777; color:#111; box-shadow:inset 1px 1px #eee, inset -1px -1px #999; overflow:hidden; }
 .blog-post-header { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 11px; background:#d4d4d4; border-bottom:2px solid #777; }
 .blog-post-title { margin:0; font-size:15px; font-weight:700; }
@@ -2730,8 +2734,18 @@ const blogPosts = [
     const blogFilters = document.getElementById("blogFilters");
     const blogPostList = document.getElementById("blogPostList");
 
-    function renderBlogPosts(selectedTag) {
+    function renderBlogPosts(selectedTag, animate) {
         if (!blogPostList) return;
+        if (animate) {
+            blogPostList.classList.add("blog-posts-changing");
+            window.setTimeout(function () {
+                renderBlogPosts(selectedTag, false);
+                requestAnimationFrame(function () {
+                    blogPostList.classList.remove("blog-posts-changing");
+                });
+            }, 180);
+            return;
+        }
         blogPostList.innerHTML = "";
         const visiblePosts = selectedTag === "All Posts"
             ? blogPosts
@@ -2788,13 +2802,16 @@ const blogPosts = [
             filter.textContent = tag;
             filter.setAttribute("aria-pressed", String(index === 0));
             filter.addEventListener("click", function () {
+                filter.classList.remove("clicked");
+                void filter.offsetWidth;
+                filter.classList.add("clicked");
                 blogFilters.querySelectorAll(".blog-filter").forEach(function (button) {
                     button.classList.remove("active");
                     button.setAttribute("aria-pressed", "false");
                 });
                 filter.classList.add("active");
                 filter.setAttribute("aria-pressed", "true");
-                renderBlogPosts(tag);
+                renderBlogPosts(tag, true);
             });
             blogFilters.appendChild(filter);
         });
