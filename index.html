@@ -436,7 +436,6 @@ main.section-switching {
     transform: translateY(10px);
 }
 
-/* Show one portfolio section at a time instead of one long scroll page. */
 main > section {
     display: none;
     min-height: calc(100vh - 95px);
@@ -1206,7 +1205,6 @@ footer {
 </style>
 
 <style>
-/* Security-camera presentation layer: the content remains ordinary editable HTML. */
 :root {
     --bg: #17191b;
     --surface: #c7c7c7;
@@ -1260,7 +1258,6 @@ main > section > * { position:relative; z-index:1; }
 .music-options * { color:#111; }
 @media (max-width:760px) { .layout{grid-template-columns:1fr;padding:8px}.sidebar{position:relative}.camera-console{grid-template-columns:1fr}.work-grid{grid-template-columns:1fr}.topbar{height:auto;min-height:64px} }
 
-/* Reference-matched console geometry */
 .topbar { position:relative; display:flex; align-items:stretch; gap:0; min-height:42px; height:42px; padding:0; background:#c6c6c6; border-bottom:2px solid #555; box-shadow:inset 0 1px #fff; }
 .brand { order:4; margin-left:auto; padding:4px 10px; min-width:190px; border-left:2px solid #777; }
 .brand-mark { display:none; }
@@ -1325,7 +1322,6 @@ main > section::before { opacity:.12; }
 .diagnostic-group { display:flex; align-items:center; gap:7px; }.power-meter,.temperature-meter { display:flex; gap:2px; padding:2px; min-width:170px; height:14px; border:2px inset #eee; background:#eee; }.power-meter b,.temperature-meter b { flex:1; background:#111; }.diagnostic-light { width:13px; height:13px; background:#f22; border:2px inset #eee; }.temperature-meter { min-width:270px; }.temperature-meter b { max-width:9px; }
 @media (max-width:760px) { .topbar{height:48px;min-height:48px}.console-clock{flex-basis:105px;width:105px;font-size:11px}.console-clock .clock-time{font-size:11px}.console-clock small{font-size:10px}.brand{margin-left:0}.layout{grid-template-columns:1fr}.sidebar{display:block;border-right:0;border-bottom:2px solid #555}.side-nav{height:auto;min-height:210px;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,64px);gap:5px;padding:7px}.side-nav a{padding:10px;font-size:12px;gap:7px}.side-nav a span{flex-basis:22px;width:22px;height:22px;font-size:9px}main>section,#works{padding:12px 8px 58px}.section-heading{margin:-12px -8px 12px}.camera-console{display:block;min-height:620px;margin:0 -8px 12px!important}.camera-map{position:relative;inset:auto;width:auto;border-right:0;border-bottom:2px solid #555}.camera-buttons{padding:8px 0}.monitor-status{display:none}.work-grid{display:grid;position:absolute;top:190px;left:0;width:100%;height:430px;padding:46px 8px 8px;grid-template-columns:1fr 1fr}.work-grid::before{left:8px}.camera-feed{min-height:180px}.camera-feed video,.camera-feed img{height:180px}.console-diagnostics{height:32px;font-size:9px}.temperature{display:none}.power-meter{min-width:100px} }
 
-/* Keep the console locked to the viewport; the monitor owns its content area. */
 html, body { height:100%; overflow:hidden; }
 body { min-height:0; }
 .layout { height:calc(100vh - 80px); min-height:0; overflow:hidden; }
@@ -1350,7 +1346,6 @@ main > section { height:100%; min-height:0; overflow:hidden; }
 </style>
 
 <style>
-/* The console stays fixed; only long-form Blogs and Schedule content scroll. */
 main > section:not(#study):not(#blogs) { overflow:hidden; }
 main > section#study,
 main > section#blogs { overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#555 #c6c6c6; }
@@ -1366,7 +1361,6 @@ main > section#blogs::-webkit-scrollbar-thumb { background:#555; border:2px soli
 }
 </style>
 <style>
-/* Sticky main monitor with a scrolling project archive below it. */
 html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .work-grid { overflow-y:scroll !important; overflow-x:hidden; grid-template-rows:none; align-content:start; scrollbar-width:thin; scrollbar-color:#555 #050606; }
 .work-grid { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:clamp(250px,42vh,420px) repeat(3,190px); grid-auto-rows:190px; contain:none; min-height:0; }
@@ -1402,7 +1396,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 }
 </style>
 <style>
-/* Final console cleanup: keep the project dialog and clock in the same archive UI. */
 .console-clock::before { content:none; }
 .console-clock .clock-icon { color:#b40000; font-size:11px; }
 
@@ -1432,18 +1425,15 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .modal-close:hover { color:#b40000; }
 </style>
 <style>
-/* Hide all recording indicators. */
 .work-card::before,
 .camera-feed-rec,
 .monitor-status strong { display:none !important; }
 
-/* Cover the REC mark embedded in the source video files. */
 .modal-media:has(video)::after {
     display:none !important;
 }
 </style>
 <style>
-/* Centered Home monitor panel in the same archive-console art style. */
 #home {
     display:none;
     min-height:0;
@@ -1491,7 +1481,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 }
 </style>
 <style>
-/* Lift the Works feed slightly while preserving its fixed monitor layout. */
 #works .work-grid {
     padding-top:28px;
 }
@@ -1500,7 +1489,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 }
 </style>
 <style>
-/* Small ambient movement for the console diagnostics. */
 .power-meter b,
 .temperature-meter b {
     opacity:.18;
@@ -1510,7 +1498,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 .temperature-meter b.is-active { opacity:1; }
 </style>
 <style>
-/* Schedule console cleanup and reliable internal scrolling. */
 #study {
     background:#0c0e0f !important;
     color:#111;
@@ -1563,7 +1550,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 }
 </style>
 <style>
-/* Keep schedule labels readable against the console grid. */
 #study .schedule-event,
 #study .schedule-event.daily-practice {
     background:#c6c6c6 !important;
@@ -1584,7 +1570,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 }
 </style>
 <style>
-/* Make the About accordion readable in the gray console theme. */
 #about {
     background:#0c0e0f !important;
     color:#111;
@@ -1614,7 +1599,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 }
 </style>
 <style>
-/* Interactive archive-button feedback. */
 @keyframes archiveButtonScan {
     0% { transform:translateX(0); box-shadow:inset 1px 1px #fff, inset -1px -1px #777; }
     35% { transform:translateX(4px); background:#f0f0f0; box-shadow:inset 3px 3px #777, 0 0 0 2px #ed1010; }
@@ -1663,7 +1647,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 }
 </style>
 <style>
-/* Flashier About panels with readable console contrast. */
 #about .accordion { gap:10px; }
 #about .accordion button {
     position:relative;
@@ -1730,7 +1713,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 @keyframes aboutHeaderSweep { to { transform:translateX(120%); } }
 </style>
 <style>
-/* Separate project types into clean expandable archive menus. */
 .camera-buttons { display:flex; flex-direction:column; gap:10px; padding:12px 5px; }
 .archive-group { border:2px solid #777; background:#c6c6c6; box-shadow:inset 1px 1px #fff, inset -1px -1px #999; }
 .archive-group summary { list-style:none; cursor:pointer; padding:11px 12px; background:#d8d8d8; color:#111; font-size:13px; font-weight:700; border-bottom:2px solid #777; user-select:none; }
@@ -1846,7 +1828,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
     .archive-group-list { gap:6px; }
     .archive-group.is-open .archive-group-list { padding-top:7px; padding-bottom:7px; }
 }
-/* Final responsive layout: keep the archive usable on phones and narrow windows. */
 @media (max-width:760px) {
     html, body {
         width:100%;
@@ -2013,7 +1994,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 }
 </style>
 <style>
-/* Blog console: matches the site's archive and security-monitor styling. */
 .blog-console { background:#050606; border:2px solid #555; padding:14px; box-shadow:inset 0 0 0 2px #222; }
 .blog-intro { margin:0 0 12px; padding:12px; background:#c6c6c6; border:2px solid #777; color:#111; font-weight:700; }
 .blog-filter-bar { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
@@ -2043,7 +2023,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 <body>
 
 <div class="background" aria-hidden="true">
-    <!-- Replace background.mp4 with your own looping background video. -->
     <video class="background-video" autoplay muted loop playsinline preload="auto">
         <source src="steponupremixmap1.mp4" type="video/mp4">
     </video>
@@ -2105,8 +2084,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 
         <div class="profile-mini">
 
-            <!-- Put profile.jpg beside this HTML file, or change this path to your image. -->
-            <!-- Put this image in the same folder as index.html. -->
             <img
                 class="avatar"
                 src="new channel image.png"
@@ -2190,7 +2167,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 
                     <div class="art-frame">
 
-                        <!-- Replace featured-art.png with the exact name of your artwork. -->
                         <img
                             src="control1redo.png"
                             alt="Featured artwork"
@@ -2702,16 +2678,12 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 
 <script>
 
-/* EDITABLE PORTFOLIO SETTINGS
-   Change these labels without touching the layout. Add more camera names if you add more work cards. */
 const portfolioSettings = {
     showroomLabel: "PROJECT MONITOR",
     cameraPrefix: "CAM",
     cameraNames: ["CAM 1", "CAM 2", "CAM 3", "CAM 4", "CAM 5", "CAM 6", "CAM 7", "CAM 8"]
 };
 
-/* EDITABLE BLOG POSTS
-   Add a new object here with a title, message, date, and tags. */
 const blogPosts = [
     {
         title: "Welcome to the blog",
@@ -2840,8 +2812,6 @@ const blogPosts = [
             return column;
         });
         renderCards.forEach(function (card, index) {
-            // Distribute cards across all columns deterministically so unloaded
-            // image heights cannot send every card into the first column.
             columns[index % columns.length].appendChild(card);
         });
     }
@@ -2940,7 +2910,6 @@ const blogPosts = [
         cameraButtons.querySelector(".camera-button")?.click();
     }
 
-    // Animate the archive dropdowns instead of using an instant native fold.
     document.querySelectorAll(".archive-group").forEach(function (group) {
         const summary = group.querySelector("summary");
         if (!summary) return;
@@ -2970,7 +2939,7 @@ const blogPosts = [
         const time = new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit" }).format(new Date());
         const localeRegion = new Intl.Locale(locale).maximize().region;
         let country = localeRegion || options.timeZone || locale;
-        try { country = new Intl.DisplayNames([locale], { type: "region" }).of(localeRegion) || country; } catch (error) { /* region code fallback */ }
+        try { country = new Intl.DisplayNames([locale], { type: "region" }).of(localeRegion) || country; } catch (error) {}
         const timeElement = localClock.querySelector(".clock-time");
         if (timeElement) timeElement.textContent = time;
         localClock.title = "Local time in " + country;
@@ -2978,7 +2947,6 @@ const blogPosts = [
     updateLocalClock();
     window.setInterval(updateLocalClock, 1000);
 
-    // Make the bottom console feel alive without changing the page layout.
     const powerBars = [...document.querySelectorAll(".power-meter b")];
     const temperatureBars = [...document.querySelectorAll(".temperature-meter b")];
     let powerLevel = powerBars.length;
@@ -2995,7 +2963,6 @@ const blogPosts = [
     }
 
     function changePowerLevel(current, maximum) {
-        // Power mostly drains one bar, but occasional recovery can add up to three.
         const change = Math.random() < .35
             ? Math.floor(Math.random() * 3) + 1
             : -1;
@@ -3079,7 +3046,6 @@ const blogPosts = [
     const musicInfo =
         document.querySelector(".music-info");
 
-    // Add or replace filenames here with your own MP3/OGG music files.
     const musicTracks = [
         "BIRDBRAIN 1.mp3",
         "Overtime.mp3",
@@ -3214,12 +3180,10 @@ const blogPosts = [
         musicStarted = true;
         musicWasPlaying = true;
         musicAudio.play().catch(function () {
-            // Browsers may require the first user interaction before allowing audio.
             musicStarted = false;
         });
     }
 
-    // Try immediately, then retry after any interaction if the browser blocks autoplay.
     tryAutostartMusic();
     document.addEventListener("pointerdown", tryAutostartMusic);
 
@@ -3363,7 +3327,6 @@ const blogPosts = [
         const frequencies = new Uint8Array(secretAnalyser.frequencyBinCount);
         secretAnalyser.getByteFrequencyData(frequencies);
 
-        // Bass and lower-mid frequencies usually carry the strongest beat.
         const beatBins = Math.min(28, frequencies.length);
         let total = 0;
         for (let index = 0; index < beatBins; index += 1) {
@@ -3371,7 +3334,6 @@ const blogPosts = [
         }
 
         const rawStrength = Math.min(1, (total / beatBins) / 58);
-        // Fast attack and gentle release make the dots flash on the musical beat.
         secretBeatLevel = rawStrength > secretBeatLevel
             ? secretBeatLevel + (rawStrength - secretBeatLevel) * .72
             : secretBeatLevel + (rawStrength - secretBeatLevel) * .18;
@@ -3422,7 +3384,6 @@ const blogPosts = [
                 secretAudioContext.resume();
             }
             secretVideo.play().catch(function () {
-                // The sequence was started by a click, so playback should be allowed.
             });
             cancelAnimationFrame(secretBeatFrame);
             secretBeatFrame = requestAnimationFrame(followSecretBeat);
@@ -3441,7 +3402,6 @@ const blogPosts = [
     function resumeBackground() {
         if (backgroundVideo && !document.hidden && document.hasFocus() && !document.body.classList.contains("modal-open")) {
             backgroundVideo.play().catch(function () {
-                // Browsers may delay autoplay until the first user interaction.
             });
         }
     }
@@ -3476,13 +3436,10 @@ const blogPosts = [
     const modalClose =
         document.getElementById("modalClose");
 
-    // Set only local MP4 previews to 35% volume.
-    // They remain muted in the cards so autoplay still works.
     document.querySelectorAll(".work-video").forEach(function (video) {
         video.volume = 0.35;
     });
 
-    // Load previews only near the viewport, then play them only while focused.
     function loadPreview(video) {
         if (video.dataset.loaded === "true") {
             return;
@@ -3506,7 +3463,6 @@ const blogPosts = [
 
             if (entry.isIntersecting && entry.intersectionRatio >= 0.6 && !document.hidden) {
                 video.play().catch(function () {
-                    // Autoplay may be blocked until the visitor interacts with the page.
                 });
             } else {
                 video.pause();
@@ -3545,8 +3501,6 @@ const blogPosts = [
 
         pauseBackground();
 
-        // Render cards are still images, so opening one must not interrupt
-        // the soundtrack. Animation projects temporarily pause the music.
         const projectCategory = (card.dataset.category ||
             (card.dataset.mediaType === "image" ? "render" : "animation")).toLowerCase();
         projectPausedMusic = projectCategory === "animation";
@@ -3554,7 +3508,6 @@ const blogPosts = [
             pauseMusic();
         }
 
-        // The modal becomes the main focus, so stop background previews.
         document.querySelectorAll(".work-video").forEach(function (video) {
             video.pause();
         });
@@ -3603,7 +3556,6 @@ const blogPosts = [
 
     function closeProject() {
 
-        // Stop and remove any media before hiding the modal.
         const video = modalMedia.querySelector("video");
 
         if (video) {
@@ -3616,7 +3568,6 @@ const blogPosts = [
         const iframe = modalMedia.querySelector("iframe");
 
         if (iframe) {
-            // Removing the iframe stops the YouTube player completely.
             iframe.src = "about:blank";
         }
 
@@ -3629,7 +3580,6 @@ const blogPosts = [
             resumeMusic();
         }
 
-        // Let visible previews continue after the modal closes.
         if (!document.hidden) {
             document.querySelectorAll(".work-card[data-media-type='video'] .work-video")
                 .forEach(function (video) {
