@@ -2719,9 +2719,12 @@ const blogPosts = [
             return;
         }
         blogPostList.innerHTML = "";
+        const getPostTags = function (post) {
+            return Array.isArray(post.tags) ? post.tags : [];
+        };
         const visiblePosts = selectedTag === "All Posts"
             ? blogPosts
-            : blogPosts.filter(function (post) { return post.tags.includes(selectedTag); });
+            : blogPosts.filter(function (post) { return getPostTags(post).includes(selectedTag); });
 
         if (!visiblePosts.length) {
             const empty = document.createElement("div");
@@ -2751,21 +2754,24 @@ const blogPosts = [
 
             const tags = document.createElement("div");
             tags.className = "blog-post-tags";
-            post.tags.forEach(function (tag) {
+            getPostTags(post).forEach(function (tag) {
                 const tagElement = document.createElement("span");
                 tagElement.className = "blog-tag";
                 tagElement.textContent = tag;
                 tags.appendChild(tagElement);
             });
 
-            article.append(header, message, tags);
+            article.append(header, message);
+            if (tags.childElementCount) article.appendChild(tags);
             blogPostList.appendChild(article);
         });
     }
 
     if (blogFilters && blogPostList) {
         const tags = ["All Posts"].concat(
-            Array.from(new Set(blogPosts.flatMap(function (post) { return post.tags; })))
+            Array.from(new Set(blogPosts.flatMap(function (post) {
+                return Array.isArray(post.tags) ? post.tags : [];
+            })))
         );
         tags.forEach(function (tag, index) {
             const filter = document.createElement("button");
