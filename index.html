@@ -1570,8 +1570,8 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 }
 #study .schedule-event:hover,
 #study .schedule-event:focus-visible { background:#eee !important; transform:translateY(-1px); box-shadow:inset 1px 1px #fff, inset -1px -1px #777, 0 0 0 2px #ed1010 !important; outline:none; }
-#study .schedule-event strong { display:block; font-size:12px; line-height:1.1; }
-#study .schedule-event small { display:block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:9px; font-weight:400; line-height:1.1; }
+#study .schedule-event strong { display:block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:clamp(10px, .9vw, 16px); line-height:1.1; }
+#study .schedule-event small { display:block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:clamp(8px, .62vw, 12px); font-weight:400; line-height:1.1; }
 #study .schedule-event { position:relative; }
 #study .schedule-event::after { content:"CLICK FOR DETAILS"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.68); color:#fff; font:700 9px monospace; letter-spacing:.04em; opacity:0; transition:opacity .16s ease; pointer-events:none; }
 #study .schedule-event:hover::after, #study .schedule-event:focus-visible::after { opacity:1; }
@@ -1579,9 +1579,10 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 #study .schedule-day {
     color:#111 !important;
     font-family:Arial, Helvetica, sans-serif !important;
+    font-size:clamp(10px, .85vw, 15px) !important;
     font-weight:700 !important;
 }
-#study .schedule-times { grid-template-rows:repeat(29, 38px); font-size:11px; }
+#study .schedule-times { grid-template-rows:repeat(29, 38px); font-size:clamp(9px, .72vw, 13px); }
 #study .schedule-slots { grid-template-rows:repeat(56, 19px); background:repeating-linear-gradient(to bottom, transparent 0, transparent 18px, #777 18px, #777 19px); }
 #study .schedule-event { margin:2px; padding:4px; }
 #study .schedule-wrapper { max-height:calc(100vh - 145px); }
