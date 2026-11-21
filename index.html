@@ -1561,13 +1561,31 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
     font-weight:700 !important;
     text-shadow:none !important;
     box-shadow:inset 1px 1px #fff, inset -1px -1px #777 !important;
+    display:flex !important;
+    flex-direction:column;
+    justify-content:center;
+    gap:2px;
+    cursor:pointer;
+    transition:background .16s ease, transform .16s ease, box-shadow .16s ease;
 }
+#study .schedule-event:hover,
+#study .schedule-event:focus-visible { background:#eee !important; transform:translateY(-1px); box-shadow:inset 1px 1px #fff, inset -1px -1px #777, 0 0 0 2px #ed1010 !important; outline:none; }
+#study .schedule-event strong { display:block; font-size:12px; line-height:1.1; }
+#study .schedule-event small { display:block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:9px; font-weight:400; line-height:1.1; }
+#study .schedule-event { position:relative; }
+#study .schedule-event::after { content:"CLICK FOR DETAILS"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.68); color:#fff; font:700 9px monospace; letter-spacing:.04em; opacity:0; transition:opacity .16s ease; pointer-events:none; }
+#study .schedule-event:hover::after, #study .schedule-event:focus-visible::after { opacity:1; }
 #study .schedule-corner,
 #study .schedule-day {
     color:#111 !important;
     font-family:Arial, Helvetica, sans-serif !important;
     font-weight:700 !important;
 }
+#study .schedule-times { grid-template-rows:repeat(29, 38px); font-size:11px; }
+#study .schedule-slots { grid-template-rows:repeat(56, 19px); background:repeating-linear-gradient(to bottom, transparent 0, transparent 18px, #777 18px, #777 19px); }
+#study .schedule-event { margin:2px; padding:4px; }
+#study .schedule-wrapper { max-height:calc(100vh - 145px); }
+#study .modal.schedule-view .modal-media { display:none; }
 </style>
 <style>
 #about {
@@ -2527,36 +2545,36 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
                 </div>
 
                 <div class="schedule-slots">
-                    <div class="schedule-event" style="grid-column: 2; grid-row: 25 / 35;">
-                        MA103
+                    <div class="schedule-event" data-title="MA103" data-detail="Mathematics class and assigned coursework." style="grid-column: 2; grid-row: 25 / 35;">
+                        <strong>MA103</strong><small>Mathematics</small>
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 4; grid-row: 3 / 13;">
-                        GEO02
+                    <div class="schedule-event" data-title="GEO02" data-detail="Geology lesson, notes, and class activities." style="grid-column: 4; grid-row: 3 / 13;">
+                        <strong>GEO02</strong><small>Geology</small>
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 4; grid-row: 25 / 35;">
-                        IR001
+                    <div class="schedule-event" data-title="IR001" data-detail="Industrial Revolution discussion and coursework." style="grid-column: 4; grid-row: 25 / 35;">
+                        <strong>IR001</strong><small>Industrial Revolution</small>
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 2; grid-row: 36 / 46;">
-                        MA102
+                    <div class="schedule-event" data-title="MA102" data-detail="Mathematics class, practice problems, and review." style="grid-column: 2; grid-row: 36 / 46;">
+                        <strong>MA102</strong><small>Mathematics</small>
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 4; grid-row: 36 / 46;">
-                        NTP001
+                    <div class="schedule-event" data-title="NTP001" data-detail="NSTP class activities and community-related work." style="grid-column: 4; grid-row: 36 / 46;">
+                        <strong>NTP001</strong><small>NSTP</small>
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 5; grid-row: 36 / 44;">
-                        PATHFIT001
+                    <div class="schedule-event" data-title="PATHFIT001" data-detail="Physical activity, fitness, and performance tasks." style="grid-column: 5; grid-row: 36 / 44;">
+                        <strong>PATHFIT001</strong><small>Fitness</small>
                     </div>
 
-                    <div class="schedule-event" style="grid-column: 6; grid-row: 36 / 46;">
-                        GEO09
+                    <div class="schedule-event" data-title="GEO09" data-detail="Geology lesson, activities, and topic review." style="grid-column: 6; grid-row: 36 / 46;">
+                        <strong>GEO09</strong><small>Geology</small>
                     </div>
 
-                    <div class="schedule-event daily-practice" style="grid-column: 1 / -1; grid-row: 53 / 57;">
-                        Drawing/Animation Practice
+                    <div class="schedule-event daily-practice" data-title="Drawing/Animation Practice" data-detail="Personal practice time for drawing, 3D animation, and portfolio projects." style="grid-column: 1 / -1; grid-row: 53 / 57;">
+                        <strong>Drawing/Animation Practice</strong><small>Personal projects</small>
                     </div>
                 </div>
 
@@ -2688,8 +2706,8 @@ const blogPosts = [
     {
         title: "Welcome to the blog",
         message: "This is where I give updates on my current projects or yap about random stuff...",
-        date: "???",
-        tags: []
+        date: "October 2026",
+        tags: ["Yap Session", "Life Updates"]
     },
 
     {
@@ -3442,6 +3460,26 @@ const blogPosts = [
     const modalClose =
         document.getElementById("modalClose");
 
+    document.querySelectorAll(".schedule-event").forEach(function (event) {
+        event.setAttribute("tabindex", "0");
+        event.setAttribute("role", "button");
+        const showScheduleDetails = function () {
+            modalTitle.textContent = event.dataset.title || "Schedule item";
+            modalDescription.textContent = event.dataset.detail || "No details added yet.";
+            modalMedia.innerHTML = "";
+            modal.classList.add("schedule-view", "open");
+            document.body.classList.add("modal-open");
+            modalClose.focus();
+        };
+        event.addEventListener("click", showScheduleDetails);
+        event.addEventListener("keydown", function (keyboardEvent) {
+            if (keyboardEvent.key === "Enter" || keyboardEvent.key === " ") {
+                keyboardEvent.preventDefault();
+                showScheduleDetails();
+            }
+        });
+    });
+
     document.querySelectorAll(".work-video").forEach(function (video) {
         video.volume = 0.35;
     });
@@ -3578,6 +3616,7 @@ const blogPosts = [
         }
 
         modalMedia.innerHTML = "";
+        modal.classList.remove("schedule-view");
         modal.classList.remove("open");
         document.body.classList.remove("modal-open");
         resumeBackground();
