@@ -52,152 +52,6 @@ body.modal-open {
     overflow: hidden;
 }
 
-body.secret-open {
-    overflow: hidden;
-}
-
-.secret-button {
-    border: 1px solid var(--line);
-    background: transparent;
-    color: var(--muted);
-    border-radius: 999px;
-    padding: 6px 9px;
-    font: inherit;
-    cursor: pointer;
-    opacity: .7;
-}
-
-.secret-button:hover {
-    color: var(--green);
-    border-color: var(--green);
-    opacity: 1;
-}
-
-.secret-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    visibility: hidden;
-    opacity: 0;
-    background: #000000;
-    pointer-events: none;
-    --beat-strength: 0;
-    transition: opacity 1s ease, visibility 0s linear 1s;
-}
-
-.secret-overlay.active {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto;
-    transition: opacity 1s ease, visibility 0s linear 0s;
-}
-
-.secret-overlay.closing {
-    visibility: visible;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1.2s ease, visibility 0s linear 1.2s;
-}
-
-.secret-overlay::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: #000000;
-    background-image: var(--secret-dots, none);
-    opacity: calc(.025 + (var(--beat-strength) * .24));
-    mix-blend-mode: screen;
-    transition: opacity .04s linear;
-}
-
-.secret-overlay::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    opacity: calc(.04 + (var(--beat-strength) * .22));
-    background:
-        repeating-linear-gradient(0deg, transparent 0 3px, rgba(255, 255, 255, .12) 4px 5px),
-        linear-gradient(90deg, rgba(255, 255, 255, .08), transparent 30%, rgba(255, 255, 255, .06));
-    mix-blend-mode: screen;
-    transform: translateX(calc(var(--beat-strength) * 8px)) scaleY(calc(1 + (var(--beat-strength) * .025)));
-    transition: opacity .04s linear, transform .04s linear;
-}
-
-.secret-overlay.darkening::before {
-    animation: secretDarken 1.8s ease-in forwards;
-}
-
-.secret-overlay.playing::before {
-    opacity: .35;
-    animation: secretPulse 2.8s ease-in-out infinite;
-}
-
-.secret-overlay.lighting::before {
-    animation: secretLights 1.8s ease-out forwards;
-}
-
-.secret-video {
-    position: relative;
-    z-index: 1;
-    width: min(92vw, 1100px);
-    max-height: 88vh;
-    object-fit: contain;
-    opacity: 0;
-    transform: scale(.96);
-    border: 0;
-    box-shadow: 0 0 70px rgba(255, 255, 255, .12);
-}
-
-.secret-overlay.playing .secret-video {
-    opacity: 1;
-    transform: scale(1);
-    transition: opacity .8s ease, transform 1.2s cubic-bezier(.16, 1, .3, 1);
-}
-
-.secret-overlay.playing .secret-video {
-    filter: brightness(calc(.62 + (var(--beat-strength) * .24))) contrast(calc(1 + (var(--beat-strength) * .3))) grayscale(.78);
-}
-
-@keyframes secretDarken {
-    0%, 100% { opacity: 0; }
-    35% { opacity: .22; }
-    55% { opacity: .04; }
-    75% { opacity: .5; }
-}
-
-@keyframes secretPulse {
-    0%, 100% { opacity: .18; filter: hue-rotate(0deg); }
-    50% { opacity: .5; filter: hue-rotate(35deg); }
-}
-
-@keyframes secretLights {
-    0% { opacity: .55; }
-    30% { opacity: .08; }
-    55% { opacity: .7; }
-    75% { opacity: .16; }
-    100% { opacity: 0; }
-}
-
-@keyframes secretGlitchIn {
-    0% { clip-path: inset(50% 0 50% 0); filter: brightness(.2) saturate(0); }
-    35% { clip-path: inset(8% 0 70% 0); filter: brightness(1.4) saturate(1.5); }
-    55% { clip-path: inset(65% 0 12% 0); }
-    75% { clip-path: inset(3% 0 3% 0); filter: brightness(.7) saturate(1.2); }
-    100% { clip-path: inset(0); filter: none; }
-}
-
-@keyframes secretGlitchOut {
-    0% { clip-path: inset(0); opacity: 1; }
-    35% { clip-path: inset(4% 0 60% 0); transform: translateX(-5px); }
-    65% { clip-path: inset(58% 0 5% 0); transform: translateX(4px); }
-    100% { clip-path: inset(50% 0 50% 0); opacity: 0; }
-}
-
 .background {
     position: fixed;
     inset: 0;
@@ -269,20 +123,6 @@ body.secret-open {
     background: var(--green);
     color: #0d2416;
     font-weight: 900;
-}
-
-.brand-mark.secret-button {
-    border: 0;
-    padding: 0;
-    opacity: 1;
-    font-size: 17px;
-}
-
-.brand-mark.secret-button:hover {
-    color: #0d2416;
-    border: 0;
-    filter: brightness(1.12);
-    transform: rotate(-8deg) scale(1.06);
 }
 
 .brand-name {
@@ -1134,16 +974,6 @@ footer {
         top: 7px;
         font-size: 24px;
         padding: 3px 7px;
-    }
-
-    .secret-button {
-        padding: 5px 7px;
-        font-size: 12px;
-    }
-
-    .secret-video {
-        width: 96vw;
-        max-height: 78vh;
     }
 
     .work-grid {
@@ -2037,6 +1867,21 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
     .blog-post-title { font-size:14px; }
 }
 </style>
+<style>
+.social-console { background:#050606; border:2px solid #555; padding:14px; box-shadow:inset 0 0 0 2px #222; }
+.social-intro { margin:0 0 12px; padding:12px; background:#c6c6c6; border:2px solid #777; color:#111; font-weight:700; }
+.social-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:10px; }
+.social-card { position:relative; display:flex; flex-direction:column; min-height:110px; overflow:hidden; background:#c6c6c6; border:2px outset #eee; color:#111; text-decoration:none; box-shadow:inset 1px 1px #fff, inset -1px -1px #777; transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.social-card::after { content:"OPEN LINK"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.68); color:#fff; font:700 12px monospace; letter-spacing:.08em; opacity:0; transition:opacity .18s ease; pointer-events:none; }
+.social-card:hover, .social-card:focus-visible { transform:translateY(-3px); border-color:#ed1010; box-shadow:inset 1px 1px #fff, inset -1px -1px #777, 0 0 0 2px #ed1010, 0 0 16px rgba(237,16,16,.35); outline:none; }
+.social-card:hover::after, .social-card:focus-visible::after { opacity:1; }
+.social-card:active { transform:translateY(0) scale(.98); }
+.social-card-image { width:100%; height:86px; object-fit:cover; border-bottom:2px solid #777; background:#999; }
+.social-card-body { display:flex; flex:1; flex-direction:column; justify-content:center; gap:4px; padding:10px 12px; }
+.social-card-name { margin:0; color:#111; font-size:15px; font-weight:700; }
+.social-card-description { margin:0; color:#333; font-size:11px; line-height:1.3; }
+@media (max-width:760px) { .social-console { padding:8px; } .social-grid { grid-template-columns:1fr; } }
+</style>
 </head>
 
 <body>
@@ -2056,10 +1901,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
     </div>
 
     <div class="brand">
-        <button class="brand-mark secret-button" id="secretButton" type="button" aria-label="Open secret sequence">
-            ✦
-        </button>
-
         <span>
             <span class="brand-name">CreepsterDan601</span>
             <span class="brand-subtitle">(PORTFOLIUS PURGATORIUS)</span>
@@ -2615,27 +2456,9 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
                 </div>
             </div>
 
-            <div class="simple-panel">
-
-                <p>
-                    My Socials! (Where I'm the most active or where I place my projects as previews).
-                </p>
-
-                <div class="chip-list">
-
-                    <a
-                        class="chip"
-                        href="https://x.com/@CreepsterDan601"
-                    >
-                        X (formerly Twitter)
-                    </a>
-
-                    <a
-                        class="chip"
-                        href="https://youtube.com/@CreepsterDan601"
-                    >
-                        Youtube Channel
-                    </a>
+            <div class="social-console">
+                <p class="social-intro">My Socials! (Where I'm the most active or where I place my projects as previews).</p>
+                <div class="social-grid" id="socialGrid"></div>
 
                 </div>
 
@@ -2687,12 +2510,6 @@ html, body, body * { font-family:Arial, Helvetica, sans-serif !important; }
 
 </div>
 
-<div class="secret-overlay" id="secretOverlay" aria-hidden="true">
-    <video class="secret-video" id="secretVideo" playsinline preload="auto">
-        <source src="secret1.mp4" type="video/mp4">
-    </video>
-</div>
-
 <audio id="backgroundMusic" preload="metadata"></audio>
 
 <script>
@@ -2719,11 +2536,47 @@ const blogPosts = [
     }
 ];
 
+const socialLinks = [
+    { name: "X (formerly Twitter)", url: "https://x.com/@CreepsterDan601", description: "Updates and project previews.", image: "" },
+    { name: "YouTube Channel", url: "https://youtube.com/@CreepsterDan601", description: "Animations, renders, and videos.", image: "" }
+];
+
 (function () {
     "use strict";
 
     const blogFilters = document.getElementById("blogFilters");
     const blogPostList = document.getElementById("blogPostList");
+    const socialGrid = document.getElementById("socialGrid");
+
+    if (socialGrid) {
+        socialLinks.forEach(function (social) {
+            const link = document.createElement("a");
+            link.className = "social-card";
+            link.href = social.url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+
+            if (social.image) {
+                const image = document.createElement("img");
+                image.className = "social-card-image";
+                image.src = social.image;
+                image.alt = social.name;
+                link.appendChild(image);
+            }
+
+            const body = document.createElement("div");
+            body.className = "social-card-body";
+            const name = document.createElement("h3");
+            name.className = "social-card-name";
+            name.textContent = social.name;
+            const description = document.createElement("p");
+            description.className = "social-card-description";
+            description.textContent = social.description || "";
+            body.append(name, description);
+            link.appendChild(body);
+            socialGrid.appendChild(link);
+        });
+    }
 
     function renderBlogPosts(selectedTag, animate) {
         if (!blogPostList) return;
@@ -3296,127 +3149,6 @@ const blogPosts = [
             musicAudio.currentTime = (Number(musicProgress.value) / 100) * musicAudio.duration;
         }
     });
-
-    const secretButton =
-        document.getElementById("secretButton");
-
-    const secretOverlay =
-        document.getElementById("secretOverlay");
-
-    const secretVideo =
-        document.getElementById("secretVideo");
-
-    let secretTimer;
-    let secretBeatFrame;
-    let secretAudioContext;
-    let secretAnalyser;
-    let secretAudioSource;
-    let secretBeatLevel = 0;
-
-    function randomizeSecretDots() {
-        const dots = [];
-        for (let index = 0; index < 90; index += 1) {
-            const x = Math.floor(Math.random() * 101);
-            const y = Math.floor(Math.random() * 101);
-            const size = Math.random() < .82 ? 1 : 2;
-            const opacity = (.14 + Math.random() * .26).toFixed(2);
-            dots.push(`radial-gradient(circle at ${x}% ${y}%, rgba(255,255,255,${opacity}) 0 ${size}px, transparent ${size + 1.5}px)`);
-        }
-        secretOverlay.style.setProperty("--secret-dots", dots.join(","));
-        secretOverlay.style.setProperty("--beat-strength", "0");
-    }
-
-    function setupSecretAudio() {
-        if (secretAnalyser) {
-            return;
-        }
-
-        try {
-            secretAudioContext = new (window.AudioContext || window.webkitAudioContext)();
-            secretAnalyser = secretAudioContext.createAnalyser();
-            secretAnalyser.fftSize = 256;
-            secretAudioSource = secretAudioContext.createMediaElementSource(secretVideo);
-            secretAudioSource.connect(secretAnalyser);
-            secretAnalyser.connect(secretAudioContext.destination);
-        } catch (error) {
-            secretAnalyser = null;
-        }
-    }
-
-    function followSecretBeat() {
-        if (!secretAnalyser || secretVideo.paused) {
-            secretOverlay.style.setProperty("--beat-strength", "0");
-            return;
-        }
-
-        const frequencies = new Uint8Array(secretAnalyser.frequencyBinCount);
-        secretAnalyser.getByteFrequencyData(frequencies);
-
-        const beatBins = Math.min(28, frequencies.length);
-        let total = 0;
-        for (let index = 0; index < beatBins; index += 1) {
-            total += frequencies[index];
-        }
-
-        const rawStrength = Math.min(1, (total / beatBins) / 58);
-        secretBeatLevel = rawStrength > secretBeatLevel
-            ? secretBeatLevel + (rawStrength - secretBeatLevel) * .72
-            : secretBeatLevel + (rawStrength - secretBeatLevel) * .18;
-        secretOverlay.style.setProperty("--beat-strength", secretBeatLevel.toFixed(3));
-        secretBeatFrame = requestAnimationFrame(followSecretBeat);
-    }
-
-    function finishSecretSequence() {
-        if (secretOverlay.classList.contains("closing")) {
-            return;
-        }
-        cancelAnimationFrame(secretBeatFrame);
-        secretOverlay.style.setProperty("--beat-strength", "0");
-        secretOverlay.classList.remove("playing");
-        secretOverlay.classList.add("lighting");
-        secretOverlay.classList.add("closing");
-        secretVideo.style.animation = "secretGlitchOut 1.4s ease-in forwards";
-        secretVideo.pause();
-
-        secretTimer = setTimeout(function () {
-            secretVideo.currentTime = 0;
-            secretVideo.style.animation = "";
-            secretOverlay.className = "secret-overlay";
-            secretOverlay.setAttribute("aria-hidden", "true");
-            document.body.classList.remove("secret-open");
-            resumeBackground();
-            resumeMusic();
-        }, 1400);
-    }
-
-    secretButton.addEventListener("click", function () {
-        clearTimeout(secretTimer);
-        pauseBackground();
-        pauseMusic();
-        document.body.classList.add("secret-open");
-        secretOverlay.className = "secret-overlay active darkening";
-        randomizeSecretDots();
-        secretOverlay.setAttribute("aria-hidden", "false");
-        secretVideo.currentTime = 0;
-        secretVideo.volume = 0.25;
-        secretVideo.style.animation = "secretGlitchIn 1.8s ease-out forwards";
-
-        secretTimer = setTimeout(function () {
-            secretOverlay.classList.remove("darkening");
-            secretOverlay.classList.add("playing");
-            setupSecretAudio();
-            if (secretAudioContext && secretAudioContext.state === "suspended") {
-                secretAudioContext.resume();
-            }
-            secretVideo.play().catch(function () {
-            });
-            cancelAnimationFrame(secretBeatFrame);
-            secretBeatFrame = requestAnimationFrame(followSecretBeat);
-        }, 1800);
-    });
-
-    secretVideo.addEventListener("ended", finishSecretSequence);
-    secretVideo.addEventListener("error", finishSecretSequence);
 
     function pauseBackground() {
         if (backgroundVideo) {
